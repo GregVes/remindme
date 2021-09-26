@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.0.0-rc1 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

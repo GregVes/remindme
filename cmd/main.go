@@ -22,36 +22,31 @@ func main() {
 
 	log.Print("Authorized on account %s", bot.Self.UserName)
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(WEBHOOK_ENDPOINT, SSL_CERT))
+	_, err = bot.Request(tgbotapi.NewWebhookWithCert(WEBHOOK_ENDPOINT, SSL_CERT))
 
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
 
 	info, err := bot.GetWebhookInfo()
 
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
 
 	if info.LastErrorDate != 0 {
 		log.Printf("[Telegram callback failed]%s", info.LastErrorMessage)
 	}
 
-	updates := bot.ListenForWebhook("/")
+	log.Println(info)
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		update, err := bot.HandleUpdate(r)
-		if err != nil {
-			log.Printf("%+v\n", err.Error())
-		} else {
-			log.Printf("%+v\n", *update)
-		}
-	})
+	_ = bot.ListenForWebhook("/")
 
 	http.ListenAndServe(":8002", nil)
 
-	for update := range updates {
+	/*for update := range updates {
 		log.Println("%+v\n", update)
-	}
+	}*/
 }
