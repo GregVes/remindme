@@ -4,54 +4,87 @@ import (
 	"os"
 	"log"
 	"net/http"
-	"github.com/gregves/remindme/telegram-bot-api"
+	"net/url"
+	"strconv"
+	"io/ioutil"
+	"encoding/json"
 )
 
 var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
 var WEBHOOK_ENDPOINT = "https://radio4000-dev-api.space/bot"
 var SSL_CERT = "fullchain.pem"
 
+type (
+	Update struct {
+		UpdateId int `json:"update_id"`
+		Message Message `json:"message"`
+	}
+	Message struct {
+		Text string `json:"text"`
+		Chat Chat `json:"chat"`
+	}
+	Chat struct {
+		Id int `json:"id"`
+	}
+)
+
+func handleRequest(r *http.Request) (*Update, error) {
+	var update Update
+	if err := json.NewDecoder(r.Body).Decode(&update); err != nil {
+		log.Printf("could not decode incoming message %s", err.Error())
+		return nil, err
+	}
+	return &update, nil
+}
+
+func HandleHook(w http.ResponseWriter, r *http.Request) {
+	var update, err = handleRequest(r)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	var _, errMess = sendMessage(update.Message.Chat.Id, "hello world")
+	if errMess != nil {
+		log.Fatal(err)
+		return
+	} else {
+		log.Println("Message successfully delivered")
+		return
+	}
+}
+
+func sendMessage(chatId int, text string) (string, error) {
+	log.Printf("Sending %s to chat_id: %d", text, chatId)
+	var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage"
+	response, err := http.PostForm(
+		telegramApi,
+		url.Values{
+			"chat_id": {strconv.Itoa(chatId)},
+			"text":    {text},
+		})
+
+	if err != nil {
+		log.Printf("error when posting text to the chat: %s", err.Error())
+		return "", err
+	}
+	defer response.Body.Close()
+
+	var bodyBytes, errRead = ioutil.ReadAll(response.Body)
+	if errRead != nil {
+		log.Printf("error in parsing telegram answer %s", errRead.Error())
+		return "", err
+	}
+	bodyString := string(bodyBytes)
+	log.Printf("Body of Telegram Response: %s", bodyString)
+
+	return bodyString, nil
+}
+
+
 func main() {
-	bot, err := tgbotapi.NewBotAPI(TELEGRAM_BOT_TOKEN)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	bot.Debug = true
-
-	log.Print("Authorized on account %s", bot.Self.UserName)
-
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(WEBHOOK_ENDPOINT, SSL_CERT))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	info, err := bot.GetWebhookInfo()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if info.LastErrorDate != 0 {
-		log.Printf("[Telegram callback failed]%s", info.LastErrorMessage)
-	}
-
-	updates := bot.ListenForWebhook("/")
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		update, err := bot.HandleUpdate(r)
-		if err != nil {
-			log.Printf("%+v\n", err.Error())
-		} else {
-			log.Printf("%+v\n", *update)
-		}
-	})
-
-	http.ListenAndServe(":8002", nil)
-
-	for update := range updates {
-		log.Println("%+v\n", update)
-	}
+	http.HandleFunc("/", HandleHook)
+	log.Println("Starting server at port 8002")
+	log.Fatal(http.ListenAndServe(":8002", nil))
 }
