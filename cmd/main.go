@@ -4,7 +4,7 @@ import (
 	"os"
 	"log"
 	"net/http"
-	"github.com/gregves/telegram-bot-api"
+	"github.com/gregves/remindme/telegram-bot-api"
 )
 
 var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
