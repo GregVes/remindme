@@ -15,10 +15,17 @@ steps:
   - ./gotest ./... -v
 - name: build app
   image: plugins/docker
+  environment:
+    TOKEN:
+      from_secret: DOCKER_HUB_TOKEN
+    PASSWORD:
+      from_secret: DOCKER_HUB_PWD
   settings: 
     username: gregentoo
-    password: ${DOCKER_HUB_PWD}
+    password: DOCKER_HUB_PWD
     repo: gregentoo/remindme
+    build_args_from_env:
+      - TOKEN
     tags:
       - latest
       - ${DRONE_COMMIT_SHA}
