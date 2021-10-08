@@ -28,4 +28,3 @@ steps:
   when:
     branch:
     - master
-  #  branch: master
