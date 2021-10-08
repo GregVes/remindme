@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   bot:
-    build: .
+    image: gregentoo/remindme:latest
     container_name: bot
     restart: always
     ports:
