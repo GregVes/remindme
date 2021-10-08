@@ -13,7 +13,7 @@ steps:
   commands:
   - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
   - ./gotest ./... -v
-- name: build app
+- name: build and push image to Docker hub
   image: plugins/docker
   password:
       from_secret: DOCKER_HUB_PWD
