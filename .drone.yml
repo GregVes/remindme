@@ -26,5 +26,6 @@ steps:
       - latest
       - ${DRONE_COMMIT_SHA}
   when:
-    event: push
+    branch:
+    - master
   #  branch: master
