@@ -38,6 +38,8 @@ steps:
   when:
     branch:
     - main
+depends_on:
+  - test
 #- name: deploy
 #  image: docker/compose:1.25.0-rc2-alpine
 #  command:
