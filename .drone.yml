@@ -19,9 +19,9 @@ steps:
     - name: docker_sock
       path: /var/run/docker.sock
   commands:
-    - docker build -t gregentoo/remindme .
-    - docker push gregentoo/remindme:${DRONE_COMMIT_SHA}
-    - docker push gregentoo/remindme:latest
+    - sudo docker build -t gregentoo/remindme .
+    - sudo docker push gregentoo/remindme:${DRONE_COMMIT_SHA}
+    - sudo docker push gregentoo/remindme:latest
   #when:
   #  branch: master
   #  event: push
