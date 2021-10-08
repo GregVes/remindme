@@ -13,8 +13,6 @@ steps:
   commands:
   - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
   - ./gotest ./... -v
-  when:
-    event: push
 - name: build app
   image: plugins/docker
   settings: 
@@ -24,6 +22,6 @@ steps:
     tags:
       - latest
       - ${DRONE_COMMIT_SHA}
-  #when:
+  when:
+    event: push
   #  branch: master
-  #  event: push
