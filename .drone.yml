@@ -59,9 +59,9 @@ steps:
       from_secret: DEPLOYER_ENDPOINT
   commands:
   - curl -X POST --data '{"project":"remindme"}' -H "Content-Type:application/json"  -H "Authorization:Bearer $DEPLOYER_AUTH_TOKEN" $DEPLOYER_ENDPOINT
-#  when:
-#    branch:
-#    - main
+  when:
+    branch:
+    - main
 depends_on:
   - test
   - build
