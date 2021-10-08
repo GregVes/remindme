@@ -27,4 +27,4 @@ steps:
       - ${DRONE_COMMIT_SHA}
   when:
     branch:
-    - master
+    - main
