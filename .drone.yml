@@ -16,7 +16,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: deploy
+name: build
 
 platform:
   os: linux
@@ -40,13 +40,43 @@ steps:
     - main
 depends_on:
   - test
-#- name: deploy
-#  image: docker/compose:1.25.0-rc2-alpine
-#  command:
-#    - docker-compose -f ./docker-compose.yml up -d
-#  volumes:
-#    - name: dockersock
-#      path: /var/run/docker.sock
-#  when:
-#    branch:
-#    - main
+---
+kind: pipeline
+type: docker
+name: deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build/push Docker image
+  image: plugins/docker
+  password:
+      from_secret: DOCKER_HUB_PWD
+  settings: 
+    username: gregentoo
+    password:
+      from_secret: DOCKER_HUB_PWD
+    repo: gregentoo/remindme
+    tags:
+      - latest
+      - ${DRONE_COMMIT_SHA}
+  when:
+    branch:
+    - main
+- name: deploy
+  image: curlimages/curl
+  environment:
+    DEPLOYER_AUTH_TOKEN:
+      from_secret: DEPLOYER_AUTH_TOKEN 
+    DEPLOYER_ENDPOINT:
+      from_secret: DEPLOYER_ENDPOINT
+  commands:
+  - curl -X POST --data '{"project":"remindme"}' -H "Content-Type:application/json"  -H "Authorization:Bearer $DEPLOYER_AUTH_TOKEN" $DEPLOYER_ENDPOINT"
+  when:
+    branch:
+    - main
+depends_on:
+  - test
+  - build
