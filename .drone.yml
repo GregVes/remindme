@@ -15,7 +15,7 @@ steps:
   - ./gotest ./... -v
 - name: build app
   image: plugins/docker
-    PASSWORD:
+  password:
       from_secret: DOCKER_HUB_PWD
   settings: 
     username: gregentoo
