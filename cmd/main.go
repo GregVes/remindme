@@ -11,8 +11,6 @@ import (
 )
 
 var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
-var WEBHOOK_ENDPOINT = "https://gregentoo.com/bot"
-var SSL_CERT = "fullchain.pem"
 
 type (
 	Update struct {
@@ -39,6 +37,7 @@ func handleRequest(r *http.Request) (*Update, error) {
 }
 
 func HandleHook(w http.ResponseWriter, r *http.Request) {
+	log.Print("received request")
 	var update, err = handleRequest(r)
 
 	if err != nil {
@@ -85,14 +84,14 @@ func sendMessage(chatId int, text string) (string, error) {
 
 
 func main() {
-	var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/setWebhook?url=https://gregentoo.com/bot"
+	/*var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/setWebhook?url=https://gregentoo.com/bot"
 	response, err := http.Get(telegramApi)
 
 	if err != nil {
 		log.Printf("error when trying to set webhook: %s", err.Error())
 		os.Exit(1)
 	}
-	defer response.Body.Close()
+	defer response.Body.Close*/
 	http.HandleFunc("/", HandleHook)
 	log.Println("Starting server at port 8002")
 	log.Fatal(http.ListenAndServe(":8002", nil))
