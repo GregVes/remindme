@@ -1,6 +1,7 @@
+---
 kind: pipeline
 type: docker
-name: remindme pipeline
+name: integrate
 
 platform:
   os: linux
@@ -12,7 +13,18 @@ steps:
   commands:
   - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
   - ./gotest ./... -v
-
-trigger:
-  event: [ push ]
-
+- name: build app
+  image: plugins/docker
+  password:
+      from_secret: DOCKER_HUB_PWD
+  settings: 
+    username: gregentoo
+    password:
+      from_secret: DOCKER_HUB_PWD
+    repo: gregentoo/remindme
+    tags:
+      - latest
+      - ${DRONE_COMMIT_SHA}
+  when:
+    branch:
+    - master
