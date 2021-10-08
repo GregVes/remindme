@@ -46,7 +46,7 @@ func HandleHook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var _, errMess = sendMessage(update.Message.Chat.Id, update.Message.Text)
+	var _, errMess = sendMessage(update.Message.Chat.Id, "hello world")
 	if errMess != nil {
 		log.Fatal(err)
 		return
@@ -89,7 +89,7 @@ func main() {
 	response, err := http.Get(telegramApi)
 
 	if err != nil {
-		log.Printf("error when trying to set webhook: %s", err.Error())
+		log.Printf("error when posting text to the chat: %s", err.Error())
 		os.Exit(1)
 	}
 	defer response.Body.Close()
