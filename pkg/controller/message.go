@@ -1,10 +1,8 @@
 package controller
 
 import (
-  //"log"
-	"os"
 	"net/http"
-	//helpers "github.com/gregves/remindme/pkg/util"
+	"os"
 )
 
 var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
