@@ -1,29 +1,18 @@
----
 kind: pipeline
 type: docker
-name: test
+name: default
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-- name: unit test app
+- name: Unit test
   image: golang
   commands:
   - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
   - ./gotest ./... -v
----
-kind: pipeline
-type: docker
-name: build
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: build and push image to Docker hub
+- name: Build and push image
   image: plugins/docker
   password:
       from_secret: DOCKER_HUB_PWD
@@ -38,19 +27,7 @@ steps:
   when:
     branch:
     - main
-depends_on:
-  - test
----
-kind: pipeline
-type: docker
-name: deploy
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: deploy
+- name: Deployment
   image: curlimages/curl
   environment:
     DEPLOYER_AUTH_TOKEN:
@@ -62,6 +39,3 @@ steps:
   when:
     branch:
     - main
-depends_on:
-  - test
-  - build
