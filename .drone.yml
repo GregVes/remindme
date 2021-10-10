@@ -35,7 +35,7 @@ steps:
     DEPLOYER_ENDPOINT:
       from_secret: DEPLOYER_ENDPOINT
   commands:
-  - curl -X POST --data '{"project":"remindme"}' -H "Content-Type:application/json"  -H "Authorization:Bearer $DEPLOYER_AUTH_TOKEN" $DEPLOYER_ENDPOINT
+  - curl -X POST --data '{"project":"remindme","tag":${DRONE_COMMIT_SHA}}' -H "Content-Type:application/json"  -H "Authorization:Bearer $DEPLOYER_AUTH_TOKEN" $DEPLOYER_ENDPOINT
   when:
     branch:
     - main

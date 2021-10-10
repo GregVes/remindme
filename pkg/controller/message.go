@@ -7,20 +7,17 @@ import (
 
 var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
 
-func PostMessage(w http.ResponseWriter, r *http.Request) {
-	/*var update, err = helpers.HandleRequest(r)
-
-	if err != nil {
-		log.Fatal(err)
-		return
+type (
+	Reminder struct {
 	}
+	storage interface {
+		SaveReminder(*Reminder)
+	}
+)
 
-	var _, errMess = sendMessage(update.Message.Chat.Id, update.Message.Text)
-	if errMess != nil {
-		log.Fatal(err)
-		return
-	} else {
-		log.Println("Message successfully delivered")
-		return
-	}*/
+func PostMessage(w http.ResponseWriter, r *http.Request) {
+	// map request to Update
+	// get text
+	// parse text into a Reminder object (type + message + occurence + time)
+	// store reminder into db
 }
