@@ -10,6 +10,24 @@ import (
 	"encoding/json"
 )
 
+func HandleHook(w http.ResponseWriter, r *http.Request) {
+	var update, err = handleRequest(r)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	var _, errMess = sendMessage(update.Message.Chat.Id, update.Message.Text)
+	if errMess != nil {
+		log.Fatal(err)
+		return
+	} else {
+		log.Println("Message successfully delivered")
+		return
+	}
+}
+
 func sendMessage(chatId int, text string) (string, error) {
 	log.Printf("Sending %s to chat_id: %d", text, chatId)
 	var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage"

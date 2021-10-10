@@ -1,98 +1,26 @@
 package main
 
 import (
-	"os"
+	"fmt"
 	"log"
 	"net/http"
-	//"net/http/httputil"
-	"net/url"
-	"strconv"
-	"io/ioutil"
-	"encoding/json"
+
+	"github.com/gorilla/mux"
+	controller "github.com/gregves/remindme/pkg/controller"
 )
 
-var TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
-
-type (
-	Update struct {
-		UpdateId int `json:"update_id"`
-		Message Message `json:"message"`
-	}
-	Message struct {
-		Text string `json:"text"`
-		Chat Chat `json:"chat"`
-	}
-	Chat struct {
-		Id int `json:"id"`
-	}
-)
-
-func handleRequest(r *http.Request) (*Update, error) {
-	var update Update
-	if err := json.NewDecoder(r.Body).Decode(&update); err != nil {
-		log.Printf("could not decode incoming message %s", err.Error())
-		return nil, err
-	}
-	log.Print(update.Message)
-	return &update, nil
-}
-
-func HandleHook(w http.ResponseWriter, r *http.Request) {
-	var update, err = handleRequest(r)
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	var _, errMess = sendMessage(update.Message.Chat.Id, update.Message.Text)
-	if errMess != nil {
-		log.Fatal(err)
-		return
-	} else {
-		log.Println("Message successfully delivered")
-		return
-	}
-}
-
-func sendMessage(chatId int, text string) (string, error) {
-	log.Printf("Sending %s to chat_id: %d", text, chatId)
-	var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage"
-	response, err := http.PostForm(
-		telegramApi,
-		url.Values{
-			"chat_id": {strconv.Itoa(chatId)},
-			"text":    {text},
-		})
-
-	if err != nil {
-		log.Printf("error when posting text to the chat: %s", err.Error())
-		return "", err
-	}
-	defer response.Body.Close()
-
-	var bodyBytes, errRead = ioutil.ReadAll(response.Body)
-	if errRead != nil {
-		log.Printf("error in parsing telegram answer %s", errRead.Error())
-		return "", err
-	}
-	bodyString := string(bodyBytes)
-	log.Printf("Body of Telegram Response: %s", bodyString)
-
-	return bodyString, nil
-}
-
+var PORT = 8002
 
 func main() {
-	/*var telegramApi string = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/setWebhook?url=https://gregentoo.com/bot"
-	response, err := http.Get(telegramApi)
+	r := mux.NewRouter()
 
-	if err != nil {
-		log.Printf("error when trying to set webhook: %s", err.Error())
-		os.Exit(1)
-	}
-	defer response.Body.Close()*/
-	http.HandleFunc("/", HandleHook)
-	log.Println("Starting server at port 8002")
-	log.Fatal(http.ListenAndServe(":8002", nil))
+	r.HandleFunc("/bot", controller.PostMessage).Methods("POST")
+	http.Handle("/bot", r)
+
+	log.Println(fmt.Sprintf("Starting server at port %d", PORT))
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil))
+
+	// parse db every 30mn to check for reminders to push to chats. Maybe it will be a separate application that the API should talk to
+	// if matches, push reminders to charts
 }

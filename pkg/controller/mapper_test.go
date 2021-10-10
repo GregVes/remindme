@@ -1,12 +1,12 @@
-package util
+package controller
 
-import(
+import (
+	"bytes"
+	"io/ioutil"
 	"net/http"
 	"testing"
+
 	"github.com/stretchr/testify/assert"
-	"github.com/gregves/remindme/pkg/model"
-	"io/ioutil"
-	"bytes"
 )
 
 func TestParsingRequestAndReturningUpdateStruct(t *testing.T) {
@@ -16,29 +16,29 @@ func TestParsingRequestAndReturningUpdateStruct(t *testing.T) {
 
 	tests := []struct {
 		input *http.Request
-		want  *model.Update
+		want  *Update
 	}{
 		{
 			input: &http.Request{
 				Body: readCloserBody,
 			},
-			want: &model.Update{
+			want: &Update{
 				UpdateId: 29329212,
-				Message: model.Message{
+				Message: Message{
 					MessageId: 566,
-					Date: 1633703801,
-					Text: "hello world",
-					Chat: model.Chat{
-						Id: 1633037542,
+					Date:      1633703801,
+					Text:      "hello world",
+					Chat: Chat{
+						Id:        1633037542,
 						FirstName: "Greg",
-						Username: "gregentoo",
-						Type: "private",
+						Username:  "gregentoo",
+						Type:      "private",
 					},
-					From: model.From{
-						Id: 1603037541,
-						IsBot: false,
-						FirstName: "Greg",
-						Username: "gregentoo",
+					From: From{
+						Id:           1603037541,
+						IsBot:        false,
+						FirstName:    "Greg",
+						Username:     "gregentoo",
 						LanguageCode: "e",
 					},
 				},
@@ -46,10 +46,11 @@ func TestParsingRequestAndReturningUpdateStruct(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		got, err := parseRequest(tc.input)
-		if err != nil {
-			t.Fatal(err)
+		mapper := NewRequestMapper(tc.input)
+		got := mapper.MapToUpdate()
+		if got != nil {
+			t.Fatal(got)
 		}
-		assert.Equal(t, tc.want, got)
+		assert.Equal(t, tc.want, mapper.Update)
 	}
 }

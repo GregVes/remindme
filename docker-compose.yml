@@ -2,10 +2,31 @@ version: "3.6"
 
 services:
   bot:
-    image: gregentoo/remindme:latest
+    image: gregentoo/remindme:${TAG}
     container_name: bot
     restart: always
     ports:
       - 8002:8002
     environment:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    depends_on:
+      - storage
+  storage:
+    image: postgres:${POSTGRESQL_VERSION}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REMINDME_DB_NAME=${REMINDME_DB_NAME}
+      - REMINDME_DB_USER=${REMINDME_DB_USER}
+      - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+      - /var/lib/postgresql/data
+    ports:
+      - 5433:5432
