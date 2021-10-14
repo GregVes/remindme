@@ -17,6 +17,7 @@ type (
 
 func PostMessage(w http.ResponseWriter, r *http.Request) {
 	// map request to Update
+
 	// get text
 	// parse text into a Reminder object (type + message + occurence + time)
 	// store reminder into db

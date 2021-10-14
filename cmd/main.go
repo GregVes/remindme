@@ -9,7 +9,7 @@ import (
 	controller "github.com/gregves/remindme/pkg/controller"
 )
 
-var PORT = 8002
+var PORT = 8003
 
 func main() {
 	r := mux.NewRouter()
