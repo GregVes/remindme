@@ -70,32 +70,32 @@ func TestValidateInputMessage(t *testing.T) {
 		input string
 		want  bool
 	}{
-		/*{
-			input: "/remindme check the stock price | October 17 @ 15:00",
+		{
+			input: "/remindme check the stock price | October 17 @ 1:01AM",
 			want:  true,
 		},
 		{
-			input: "/remindme check the stock price October 17 @ 15:00",
+			input: "/remindme check the stock price October 17 @ 1:01AM",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | October 17 15:0ß",
+			input: "/remindme check the stock price | October 17 1:01AM",
 			want:  false,
 		},
 		{
-			input: "/remindme October 18 | check the stock price @ 15:00",
+			input: "/remindme October 18 | check the stock price @ 1:01AM",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price October | 17 @ 15:00",
+			input: "/remindme check the stock price October | 17 @ 1:01AM",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | October 17 15:0ß",
+			input: "/remindme check the stock price | October 17 1:01AM",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | 18 October @ 15:00",
+			input: "/remindme check the stock price | 18 October @ 1:01AM",
 			want:  false,
 		},
 		{
@@ -105,7 +105,7 @@ func TestValidateInputMessage(t *testing.T) {
 		{
 			input: "/remindme check the stock price | October 26",
 			want:  false,
-		},*/
+		},
 		{
 			input: "/remindme check the stock price | October 26 @ 1:01AM",
 			want:  true,
@@ -123,7 +123,7 @@ func TestValidateInputMessage(t *testing.T) {
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | October 26 @ super time",
+			input: "/remindme check the stock price | October 26 @ 484828",
 			want:  false,
 		},
 	}
