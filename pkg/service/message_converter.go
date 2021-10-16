@@ -18,8 +18,14 @@ import (
 
 type (
 	Converter struct {
-		Input    string
-		Reminder repo.Reminder
+		Input        string
+		TempReminder TempReminder
+		Reminder     repo.Reminder
+	}
+	TempReminder struct {
+		Text    string
+		DateStr string
+		TimeStr string
 	}
 )
 
@@ -80,6 +86,12 @@ func (c *Converter) IsValidInput() bool {
 		return false
 	}
 
+	// needed by ToReminder()
+	c.TempReminder = TempReminder{
+		Text:    rawSplit[0],
+		DateStr: splitDateTime[0],
+		TimeStr: requestedTime,
+	}
 	return true
 }
 
@@ -95,6 +107,5 @@ func patternSearch(pattern string, input string) (bool, error) {
 }
 
 func (c *Converter) ToReminder() error {
-
 	return nil
 }
