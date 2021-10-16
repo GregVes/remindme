@@ -6,18 +6,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckIfMessageIsNewReminder(t *testing.T) {
+func TestIsNewReminder(t *testing.T) {
 
 	tests := []struct {
 		input string
 		want  bool
 	}{
 		{
-			input: "/remindme check the stock price | October 17 @ 5pm",
+			input: "/remindme check the stock price | October 17 @ 2:30AM",
 			want:  true,
 		},
 		{
-			input: "/reminyme check the stock price | October 17 @ 5pm",
+			input: "/reminyme check the stock price | October 17 @ 1:10AM",
 			want:  false,
 		},
 		{
@@ -31,41 +31,7 @@ func TestCheckIfMessageIsNewReminder(t *testing.T) {
 	}
 }
 
-/*func TestConvertMessageStringIntoReminderObject(t *testing.T) {
-
-	targetDate, err := time.Parse(constants.FullDateFormat, "October 17 2021")
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	tests := []struct {
-		input string
-		want  *repo.Reminder
-	}{
-		{
-			input: "/remindme check the stock price : October 17 @ 5pm",
-			want: &repo.Reminder{
-				Id:           uuid.New().String(),
-				ChatId:       1111111,
-				ChatMessage:  "check the stock price",
-				RecurrentDay: "Tuesday",
-				TargetDate:   targetDate,
-				TargetTime:   "17:00",
-			},
-		},
-	}
-	for _, tc := range tests {
-		converter := NewConverter(tc.input)
-		got := converter.ToReminder()
-		if got != nil {
-			t.Fatal(got)
-		}
-		assert.Equal(t, tc.want, converter.Reminder)
-	}
-}*/
-
-func TestValidateInputMessage(t *testing.T) {
+func TestIsValidInput(t *testing.T) {
 	tests := []struct {
 		input string
 		want  bool
@@ -171,3 +137,58 @@ func TestPatternSearch(t *testing.T) {
 		assert.Equal(t, tc.want, got)
 	}
 }
+
+func TestGetRawReminder(t *testing.T) {
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{
+			input: "/remindme check the stock price | October 17 @ 1:01AM",
+			want:  "check the stock price | October 17 @ 1:01AM",
+		},
+		{
+			input: "/remindme     buy bread | tomorrow @ 6:09PM",
+			want:  "buy bread | tomorrow @ 6:09PM",
+		},
+	}
+	for _, tc := range tests {
+		converter := NewConverter(tc.input)
+		converter.ExtractRawReminder()
+		assert.Equal(t, tc.want, converter.Input)
+	}
+}
+
+/*func TestToReminder(t *testing.T) {
+
+	targetDate, err := time.Parse(constants.FullDateFormat, "October 17 2021")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		input string
+		want  *repo.Reminder
+	}{
+		{
+			input: "/remindme check the stock price : October 17 @ 1:01AM",
+			want: &repo.Reminder{
+				Id:           uuid.New().String(),
+				ChatId:       1111111,
+				ChatMessage:  "check the stock price",
+				RecurrentDay: "Tuesday",
+				TargetDate:   targetDate,
+				TargetTime:   "17:00",
+			},
+		},
+	}
+	for _, tc := range tests {
+		converter := NewConverter(tc.input)
+		got := converter.ToReminder()
+		if got != nil {
+			t.Fatal(got)
+		}
+		assert.Equal(t, tc.want, converter.Reminder)
+	}
+}*/
