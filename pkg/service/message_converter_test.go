@@ -133,7 +133,7 @@ func TestPatternSearch(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		got, _ := PatternSearch(tc.pattern, tc.input)
+		got, _ := patternSearch(tc.pattern, tc.input)
 		assert.Equal(t, tc.want, got)
 	}
 }
@@ -191,5 +191,4 @@ func TestGetRawReminder(t *testing.T) {
 		}
 		assert.Equal(t, tc.want, converter.Reminder)
 	}
-}
-*/
+}*/

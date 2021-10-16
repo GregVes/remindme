@@ -63,7 +63,7 @@ func (c *Converter) IsValidInput() bool {
 		return false
 	}
 
-	isValidDate, err := PatternSearch(datePattern, splitDateTime[0])
+	isValidDate, err := patternSearch(datePattern, splitDateTime[0])
 	if err != nil {
 		log.Print(err)
 		return false
@@ -83,12 +83,7 @@ func (c *Converter) IsValidInput() bool {
 	return true
 }
 
-func (c *Converter) ToReminder() error {
-
-	return nil
-}
-
-func PatternSearch(pattern string, input string) (bool, error) {
+func patternSearch(pattern string, input string) (bool, error) {
 	match, err := regexp.MatchString(pattern, input)
 	if err != nil {
 		return false, err
@@ -97,4 +92,9 @@ func PatternSearch(pattern string, input string) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func (c *Converter) ToReminder() error {
+
+	return nil
 }
