@@ -1,1 +1,1 @@
-DROP TABLE IF NOT EXISTS reminder
+DROP TABLE IF EXISTS reminder;

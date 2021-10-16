@@ -1,6 +1,1 @@
-10 octobre 2021:
-
-Follow this for mocking sql: https://medium.com/easyread/unit-test-sql-in-golang-5af19075e68e
-
-create repo interface + reminder struct in repository.go
-actual implementation of ReminderRepository interface (Save()) in pkg/postgresql/postgresql.go + mocking in postgresql_test.go
+16 octobre 2021:

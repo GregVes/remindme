@@ -10,10 +10,10 @@ type (
 	Reminder struct {
 		Id           string
 		ChatId       int
-		Text         string
+		ChatMessage  string
 		RecurrentDay string
 		TargetDate   time.Time
-		TargetTime   time.Time
+		TargetTime   string
 	}
 
 	Repository interface {

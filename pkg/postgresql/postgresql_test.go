@@ -16,10 +16,10 @@ import (
 var reminder = &repo.Reminder{
 	Id:           uuid.New().String(),
 	ChatId:       1111111,
-	Text:         "this is a reminder",
+	ChatMessage:  "this is a reminder",
 	RecurrentDay: "Monday",
 	TargetDate:   time.Now(),
-	TargetTime:   time.Now(),
+	TargetTime:   "10:00",
 }
 
 func NewMock() (*sql.DB, sqlmock.Sqlmock) {
@@ -38,9 +38,9 @@ func TestSaveReminder(t *testing.T) {
 		repo.Close()
 	}()
 
-	query := `INSERT INTO reminder (chat_id, text, recurrent_day, target_date, target_time) VALUES(?, ?, ?, ?, ?)`
+	query := `INSERT INTO reminder (chat_id, chat_message, recurrent_day, target_date, target_time) VALUES(?, ?, ?, ?, ?)`
 
-	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.Text, reminder.RecurrentDay, reminder.TargetDate, reminder.TargetTime).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.ChatMessage, reminder.RecurrentDay, reminder.TargetDate, reminder.TargetTime).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	err := repo.Save(reminder)
 	assert.NoError(t, err)
