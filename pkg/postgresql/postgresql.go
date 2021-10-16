@@ -3,6 +3,7 @@ package postgresql
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 
 	repo "github.com/gregves/remindme/pkg/repository"
@@ -35,10 +36,21 @@ func (r *repository) Save(reminder *repo.Reminder) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	query := `INSERT INTO reminder (chat_id, chat_message, recurrent_day, target_date, target_time) VALUES(?, ?, ?, ?, ?)`
+	query := `INSERT INTO reminder (chat_id, chat_message, is_recurrent, target_recurrent_date, target_recurrent_day, target_date, target_time) VALUES(?, ?, ?, ?, ?, ?, ?)`
 
-	_, err := r.db.ExecContext(ctx, query, reminder.ChatId, reminder.ChatMessage, reminder.RecurrentDay, reminder.TargetDate, reminder.TargetTime)
+	_, err := r.db.ExecContext(
+		ctx,
+		query,
+		reminder.ChatId,
+		reminder.ChatMessage,
+		reminder.IsRecurrent,
+		reminder.TargetRecurrentDate,
+		reminder.TargetRecurrentDay,
+		reminder.TargetDate,
+		reminder.TargetTime,
+	)
 	if err != nil {
+		log.Print(err)
 		return err
 	}
 	return nil

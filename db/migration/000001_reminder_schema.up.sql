@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS reminder (
   target_recurrent_day VARCHAR(10) DEFAULT NULL,
   target_date date,
   target_time time NOT NULL
-);
+)

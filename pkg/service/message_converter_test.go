@@ -2,11 +2,7 @@ package service
 
 import (
 	"testing"
-	"time"
 
-	"github.com/google/uuid"
-	"github.com/gregves/remindme/pkg/constants"
-	repo "github.com/gregves/remindme/pkg/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -200,7 +196,7 @@ func TestGetRawReminder(t *testing.T) {
 	}
 }
 
-func TestToReminder(t *testing.T) {
+/*func TestToReminder(t *testing.T) {
 
 	targetDate, err := time.Parse(constants.FullDateFormat, "October 17 2021")
 
@@ -233,3 +229,4 @@ func TestToReminder(t *testing.T) {
 		assert.Equal(t, tc.want, converter.Reminder)
 	}
 }
+*/
