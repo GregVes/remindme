@@ -31,7 +31,7 @@ func NewMock() (*sql.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
-func TestSaveReminder(t *testing.T) {
+func TestSaveReminderInDB(t *testing.T) {
 	db, mock := NewMock()
 	repo := &repository{db}
 	defer func() {

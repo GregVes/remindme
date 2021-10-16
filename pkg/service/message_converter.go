@@ -47,7 +47,6 @@ func IsNewReminder(message string) bool {
 func (c *Converter) ExtractRawReminder() {
 	raw := strings.TrimPrefix(c.Input, constants.ReminderCommand)
 	raw = strings.TrimSpace(raw)
-
 	c.Input = raw
 }
 
