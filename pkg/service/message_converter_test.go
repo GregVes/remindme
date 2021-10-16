@@ -37,8 +37,24 @@ func TestIsValidInput(t *testing.T) {
 		want  bool
 	}{
 		{
+			input: "/remindme check the stock price | October 26 @ 1:01AM",
+			want:  true,
+		},
+		{
 			input: "/remindme check the stock price | October 17 @ 1:01AM",
 			want:  true,
+		},
+		{
+			input: "/remindme check the stock price | each October 17 @ 1:01AM",
+			want:  true,
+		},
+		{
+			input: "/remindme check the stock price | each Tuesday @ 1:01AM",
+			want:  true,
+		},
+		{
+			input: "/remindme check the stock price | each uesday @ 1:01AM",
+			want:  false,
 		},
 		{
 			input: "/remindme check the stock price October 17 @ 1:01AM",
@@ -71,10 +87,6 @@ func TestIsValidInput(t *testing.T) {
 		{
 			input: "/remindme check the stock price | October 26",
 			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 26 @ 1:01AM",
-			want:  true,
 		},
 		{
 			input: "/remindme check the stock price | October 26 @ 23:01",

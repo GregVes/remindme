@@ -37,6 +37,7 @@ var (
 	DatePattern               = "(today|tomorrow)|" +
 		"^(each\\s+(Monday|Tuesday|Wednesday|Thirsday|Friday|Saturday|Sunday))|" +
 		"^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2})|" +
+		"^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))|" +
 		"^(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}"
 )
 
@@ -65,12 +66,13 @@ func (c *Converter) IsValidInput() bool {
 	}
 
 	splitDateTime := strings.Split(rawSplit[1], "@")
+	date := strings.TrimSpace(splitDateTime[0])
 	if len(splitDateTime) != 2 {
 		log.Print(errorMissingArobaseSymbol)
 		return false
 	}
 
-	isValidDate, err := patternSearch(DatePattern, splitDateTime[0])
+	isValidDate, err := patternSearch(DatePattern, date)
 	if err != nil {
 		log.Print(err)
 		return false
@@ -90,13 +92,14 @@ func (c *Converter) IsValidInput() bool {
 	// needed by ToReminder()
 	c.TempReminder = TempReminder{
 		Text:    rawSplit[0],
-		DateStr: splitDateTime[0],
+		DateStr: date,
 		TimeStr: requestedTime,
 	}
 	return true
 }
 
 func patternSearch(pattern string, input string) (bool, error) {
+	log.Print(input)
 	match, err := regexp.MatchString(pattern, input)
 	if err != nil {
 		return false, err
