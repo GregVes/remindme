@@ -13,6 +13,7 @@ import (
 
 // /remindme to check the stock price : October 25 @ 5pm
 // /remindme to check the stock price : each Tuesday @ 5pm
+// /remindme to check the stock price : each Nov 17 @ 5pm
 // /remindme to check the stock price : tomorrow @ 5pm
 // /remindme to check the stock price : everyday @ 5pm
 
@@ -110,10 +111,10 @@ func patternSearch(pattern string, input string) (bool, error) {
 	return true, nil
 }
 
-/*func (c *Converter) ToReminder(chatId int64) error {
-	c.Reminder = &repo.Reminder{
+func (c *Converter) ToReminder(chatId int64) error {
+	c.Reminder = repo.Reminder{
 		ChatId:      chatId,
 		ChatMessage: c.TempReminder.Text,
 	}
 	return nil
-}*/
+}
