@@ -9,7 +9,7 @@ import (
 type (
 	Reminder struct {
 		Id           string
-		ChatId       int
+		ChatId       int64
 		ChatMessage  string
 		RecurrentDay string
 		TargetDate   time.Time

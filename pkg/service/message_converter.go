@@ -34,9 +34,10 @@ var (
 	errorMissingArobaseSymbol = errors.New("Missing @ symbol to delimitate date from time. Example: '/remindme check the stock price | October 17 @ 5:30AM'")
 	erroInvalidDate           = errors.New("Wrong date format or missing. Example. /remindme check the stock price | October 17 (or today or tomorrow or everyday or each Tueday) @ 8:00PM'")
 	erroInvalidTime           = errors.New("Wrong time format. Example. /remindme check the stock price | October 17  @ 17:00")
-	datePattern               = "(today|tomorrow)|" +
-		"each\\s+(Monday|Tuesday|Wednesday|Thirsday|Friday|Saturday|Sunday)|" +
-		"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}"
+	DatePattern               = "(today|tomorrow)|" +
+		"^(each\\s+(Monday|Tuesday|Wednesday|Thirsday|Friday|Saturday|Sunday))|" +
+		"^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2})|" +
+		"^(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}"
 )
 
 func NewConverter(message string) *Converter {
@@ -69,7 +70,7 @@ func (c *Converter) IsValidInput() bool {
 		return false
 	}
 
-	isValidDate, err := patternSearch(datePattern, splitDateTime[0])
+	isValidDate, err := patternSearch(DatePattern, splitDateTime[0])
 	if err != nil {
 		log.Print(err)
 		return false
@@ -106,6 +107,10 @@ func patternSearch(pattern string, input string) (bool, error) {
 	return true, nil
 }
 
-func (c *Converter) ToReminder() error {
+/*func (c *Converter) ToReminder(chatId int64) error {
+	c.Reminder = &repo.Reminder{
+		ChatId:      chatId,
+		ChatMessage: c.TempReminder.Text,
+	}
 	return nil
-}
+}*/
