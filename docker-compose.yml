@@ -12,8 +12,8 @@ services:
       - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
     depends_on:
-      - storage
-  storage:
+      - db
+  db:
     image: postgres:${POSTGRESQL_VERSION}
     container_name: remindme-db
     healthcheck:
