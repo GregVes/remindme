@@ -1,7 +1,9 @@
 package constants
 
 const (
-	FullDateFormat  = "January 2 2006"
-	TimeFormat      = "3:04pm"
+	MonthDayFormat = "January 2"
+	YMDDateFormat  = "2006-01-02"
+
+	TimeFormat      = "15:04"
 	ReminderCommand = "/remindme"
 )

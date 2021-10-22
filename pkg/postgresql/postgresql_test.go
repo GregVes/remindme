@@ -5,7 +5,6 @@ import (
 	"log"
 	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	repo "github.com/gregves/remindme/pkg/repository"
@@ -13,13 +12,15 @@ import (
 )
 
 var reminder = &repo.Reminder{
-	ChatId:              1111,
-	ChatMessage:         "super message",
-	IsRecurrent:         true,
-	TargetRecurrentDate: time.Now(),
-	TargetRecurrentDay:  "Monday",
-	TargetDate:          time.Now(),
-	TargetTime:          "1:30",
+	ChatId:                      1111,
+	ChatMessage:                 "super message",
+	IsRecurrent:                 true,
+	IsEveryDay:                  true,
+	RecurrentWeekDay:            "Monday",
+	RecurrentMonthlyDatePattern: nil,
+	RecurrentAnnualDate:         "October 17",
+	UniqueDate:                  "",
+	UniqueTime:                  nil,
 }
 
 func NewMock() (*sql.DB, sqlmock.Sqlmock) {
@@ -38,9 +39,9 @@ func TestSaveReminderInDB(t *testing.T) {
 		repo.Close()
 	}()
 
-	query := `INSERT INTO reminder (chat_id, chat_message, is_recurrent, target_recurrent_date, target_recurrent_day, target_date, target_time) VALUES(?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO reminder (chat_id, chat_message, is_recurrent, is_everyday, recurrent_week_day, recurrent_month_day, recurrent_date, unique_date, unique_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.ChatMessage, reminder.IsRecurrent, reminder.TargetRecurrentDate, reminder.TargetRecurrentDay, reminder.TargetDate, reminder.TargetTime).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.ChatMessage, reminder.IsRecurrent, reminder.IsEveryDay, reminder.RecurrentWeekDay, reminder.RecurrentMonthlyDatePattern, reminder.RecurrentAnnualDate, reminder.UniqueDate, reminder.UniqueTime).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	err := repo.Save(reminder)
 	assert.NoError(t, err)

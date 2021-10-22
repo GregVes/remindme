@@ -1,1 +1,3 @@
-16 octobre 2021:
+21 octobre
+
+In TestToReminder(): handle scenarii for != recurrent date in isValidInput()

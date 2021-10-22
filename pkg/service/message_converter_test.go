@@ -2,7 +2,10 @@ package service
 
 import (
 	"testing"
+	"time"
 
+	"github.com/gregves/remindme/pkg/constants"
+	repo "github.com/gregves/remindme/pkg/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,15 +16,15 @@ func TestIsNewReminder(t *testing.T) {
 		want  bool
 	}{
 		{
-			input: "/remindme check the stock price | October 17 @ 2:30AM",
+			input: "/remindme check the stock price | October 17 @ 13:00",
 			want:  true,
 		},
 		{
-			input: "/reminyme check the stock price | October 17 @ 1:10AM",
+			input: "/reminyme check the stock price | October 17 @ 08:00",
 			want:  false,
 		},
 		{
-			input: "check the stock price | October 17 @ 5pm /remindme",
+			input: "check the stock price | October 17 @ 15:30 /remindme",
 			want:  false,
 		},
 	}
@@ -31,53 +34,53 @@ func TestIsNewReminder(t *testing.T) {
 	}
 }
 
-func TestIsValidInput(t *testing.T) {
+/*func TestIsValidInput(t *testing.T) {
 	tests := []struct {
 		input string
 		want  bool
 	}{
 		{
-			input: "/remindme check the stock price | October 26 @ 1:01AM",
+			input: "/remindme check the stock price | October 26 @ 23:00",
 			want:  true,
 		},
 		{
-			input: "/remindme check the stock price | October 17 @ 1:01AM",
+			input: "/remindme check the stock price | October 17 @ 23:00",
 			want:  true,
 		},
 		{
-			input: "/remindme check the stock price | each October 17 @ 1:01AM",
+			input: "/remindme check the stock price | each October 17 @ 23:00",
 			want:  true,
 		},
 		{
-			input: "/remindme check the stock price | each Tuesday @ 1:01AM",
+			input: "/remindme check the stock price | each Tuesday @ 23:00",
 			want:  true,
 		},
 		{
-			input: "/remindme check the stock price | each uesday @ 1:01AM",
+			input: "/remindme check the stock price | each uesday @ 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price October 17 @ 1:01AM",
+			input: "/remindme check the stock price October 17 @ 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | October 17 1:01AM",
+			input: "/remindme check the stock price | October 17 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme October 18 | check the stock price @ 1:01AM",
+			input: "/remindme October 18 | check the stock price @ 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price October | 17 @ 1:01AM",
+			input: "/remindme check the stock price October | 17 @ 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | October 17 1:01AM",
+			input: "/remindme check the stock price | October 17 23:00",
 			want:  false,
 		},
 		{
-			input: "/remindme check the stock price | 18 October @ 1:01AM",
+			input: "/remindme check the stock price | October 18 @ :00",
 			want:  false,
 		},
 		{
@@ -90,7 +93,7 @@ func TestIsValidInput(t *testing.T) {
 		},
 		{
 			input: "/remindme check the stock price | October 26 @ 23:01",
-			want:  false,
+			want:  true,
 		},
 		{
 			input: "/remindme check the stock price | October 26 @ 443:434",
@@ -108,9 +111,9 @@ func TestIsValidInput(t *testing.T) {
 	for _, tc := range tests {
 		converter := NewConverter(tc.input)
 		got := converter.IsValidInput()
-		assert.Equal(t, tc.want, got)
+		assert.Equal(t, tc.want, got, tc.input)
 	}
-}
+}*/
 
 func TestPatternSearch(t *testing.T) {
 	tests := []struct {
@@ -144,49 +147,54 @@ func TestPatternSearch(t *testing.T) {
 			want:    true,
 		},
 		{
-			pattern: DatePattern,
+			pattern: DatePatterns,
 			input:   "each Nov 19",
 			want:    true,
 		},
 		{
-			pattern: DatePattern,
+			pattern: DatePatterns,
 			input:   "each Nov 10",
 			want:    true,
 		},
 		{
-			pattern: DatePattern,
+			pattern: DatePatterns,
 			input:   "eacc Nov 10",
 			want:    false,
 		},
 		{
-			pattern: DatePattern,
+			pattern: DatePatterns,
 			input:   "each Nov10",
 			want:    false,
 		},
 		{
-			pattern: DatePattern,
+			pattern: DatePatterns,
+			input:   "each 10",
+			want:    true,
+		},
+		{
+			pattern: DatePatterns,
 			input:   "each 10 Nov",
 			want:    false,
 		},
 	}
 	for _, tc := range tests {
 		got, _ := patternSearch(tc.pattern, tc.input)
-		assert.Equal(t, tc.want, got)
+		assert.Equal(t, tc.want, got, tc.input)
 	}
 }
 
-func TestGetRawReminder(t *testing.T) {
+func TestExtractRawReminder(t *testing.T) {
 	tests := []struct {
 		input string
 		want  string
 	}{
 		{
-			input: "/remindme check the stock price | October 17 @ 1:01AM",
-			want:  "check the stock price | October 17 @ 1:01AM",
+			input: "/remindme check the stock price | October 17 @ 23:00",
+			want:  "check the stock price | October 17 @ 23:00",
 		},
 		{
-			input: "/remindme     buy bread | tomorrow @ 6:09PM",
-			want:  "buy bread | tomorrow @ 6:09PM",
+			input: "/remindme     buy bread | tomorrow @ 16:30",
+			want:  "buy bread | tomorrow @ 16:30",
 		},
 	}
 	for _, tc := range tests {
@@ -195,38 +203,115 @@ func TestGetRawReminder(t *testing.T) {
 		assert.Equal(t, tc.want, converter.Input)
 	}
 }
-
-/*func TestToReminder(t *testing.T) {
-
-	targetDate, err := time.Parse(constants.FullDateFormat, "October 17 2021")
-
-	if err != nil {
-		t.Fatal(err)
+func TestToValidRecurrentAnnualDate(t *testing.T) {
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{
+			input: "each October 17",
+			want:  "October 17",
+		},
+		{
+			input: "each 17",
+			want:  "17",
+		},
 	}
+	for _, tc := range tests {
+		got := ToValidRecurrentAnnualDate(tc.input)
+		assert.Equal(t, tc.want, got)
+	}
+}
+func TestToReminder(t *testing.T) {
+	var uniqueTime time.Time
+	var recurrenMonthdate int64 = 20
+	uniqueTime, _ = time.Parse(constants.TimeFormat, "12:00")
+	// scenarii:
+	// /remindme to check the stock price : everyday @ 5pm OK
+	// /remindme to check the stock price : each 20 @ 5pm
+
+	// /remindme to check the stock price : each Tuesday @ 5pm OK
+	// /remindme to check the stock price : each November 20 @ 5pm OK
+	// /remindme to check the stock price : 2021-10-25 @ 5pm OK
 
 	tests := []struct {
 		input string
-		want  *repo.Reminder
+		want  repo.Reminder
 	}{
 		{
-			input: "/remindme check the stock price : October 17 @ 1:00AM",
-			want: &repo.Reminder{
-				Id:           uuid.New().String(),
-				ChatId:       1111111,
-				ChatMessage:  "check the stock price",
-				RecurrentDay: "Tuesday",
-				TargetDate:   targetDate,
-				TargetTime:   "00:00",
+			input: "check the stock price | each October 17 @ 12:00",
+			want: repo.Reminder{
+				ChatId:                      1111111,
+				ChatMessage:                 "check the stock price",
+				IsRecurrent:                 true,
+				IsEveryDay:                  false,
+				RecurrentWeekDay:            "",
+				RecurrentMonthlyDatePattern: nil,
+				RecurrentAnnualDate:         "October 17",
+				UniqueDate:                  "",
+				UniqueTime:                  &uniqueTime,
+			},
+		},
+		{
+			input: "check the stock price | each 20 @ 12:00",
+			want: repo.Reminder{
+				ChatId:                      1111111,
+				ChatMessage:                 "check the stock price",
+				IsRecurrent:                 true,
+				IsEveryDay:                  false,
+				RecurrentWeekDay:            "",
+				RecurrentMonthlyDatePattern: &recurrenMonthdate,
+				RecurrentAnnualDate:         "",
+				UniqueDate:                  "",
+				UniqueTime:                  &uniqueTime,
+			},
+		},
+		{
+			input: "check the stock price | 2021-10-20 @ 12:00",
+			want: repo.Reminder{
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: false,
+				UniqueDate:  "2021-10-20",
+				UniqueTime:  &uniqueTime,
+			},
+		},
+		{
+			input: "check the stock price | each Wednesday @ 12:00",
+			want: repo.Reminder{
+				ChatId:                      1111111,
+				ChatMessage:                 "check the stock price",
+				IsRecurrent:                 true,
+				IsEveryDay:                  false,
+				RecurrentWeekDay:            "Wednesday",
+				RecurrentMonthlyDatePattern: nil,
+				RecurrentAnnualDate:         "",
+				UniqueDate:                  "",
+				UniqueTime:                  &uniqueTime,
+			},
+		},
+		{
+			input: "check the stock price | everyday @ 12:00",
+			want: repo.Reminder{
+				ChatId:                      1111111,
+				ChatMessage:                 "check the stock price",
+				IsRecurrent:                 true,
+				IsEveryDay:                  true,
+				RecurrentWeekDay:            "",
+				RecurrentMonthlyDatePattern: nil,
+				RecurrentAnnualDate:         "",
+				UniqueDate:                  "",
+				UniqueTime:                  &uniqueTime,
 			},
 		},
 	}
 	for _, tc := range tests {
 		converter := NewConverter(tc.input)
-		got := converter.ToReminder(int64(11111))
+		converter.IsValidInput()
+		got := converter.ToReminder(tc.want.ChatId)
 		if got != nil {
 			t.Fatal(got)
 		}
-		assert.Equal(t, tc.want, converter.Reminder)
+		assert.Equal(t, tc.want, converter.Reminder, tc.input)
 	}
 }
-*/
