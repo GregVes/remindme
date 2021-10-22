@@ -9,6 +9,7 @@ services:
       - 8002:8002
     environment:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
     depends_on:
       - storage
   storage:
