@@ -43,8 +43,7 @@ func main() {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-	log.Print(os.Getenv("REMINDME_DB_PASSWORD"))
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", "localhost", 5433, "remindme", os.Getenv("REMINDME_DB_PASSWORD"), "remindme")
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", "remindme-db", 5433, "remindme", os.Getenv("REMINDME_DB_PASSWORD"), "remindme")
 	repository, err := postgresql.NewRepository("postgres", psqlInfo, 2, 2)
 
 	if err != nil {
