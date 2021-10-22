@@ -223,9 +223,8 @@ func TestToValidAnnualDate(t *testing.T) {
 	}
 }
 func TestToReminder(t *testing.T) {
-	var uniqueTime time.Time
 	var recurrenMonthdate int64 = 20
-	uniqueTime, _ = time.Parse(constants.TimeFormat, "12:00")
+	uniqueTime := "12:00"
 	// scenarii:
 	// /remindme to check the stock price : everyday @ 5pm OK
 	// /remindme to check the stock price : each 20 @ 5pm
@@ -248,8 +247,8 @@ func TestToReminder(t *testing.T) {
 				WeeklyDate:  "",
 				MonthlyDate: nil,
 				AnnualDate:  "October 17",
-				UniqueDate:  "",
-				UniqueTime:  &uniqueTime,
+				UniqueDate:  constants.NoUniqueDate,
+				UniqueTime:  uniqueTime,
 			},
 		},
 		{
@@ -262,8 +261,8 @@ func TestToReminder(t *testing.T) {
 				WeeklyDate:  "",
 				MonthlyDate: &recurrenMonthdate,
 				AnnualDate:  "",
-				UniqueDate:  "",
-				UniqueTime:  &uniqueTime,
+				UniqueDate:  constants.NoUniqueDate,
+				UniqueTime:  uniqueTime,
 			},
 		},
 		{
@@ -273,7 +272,7 @@ func TestToReminder(t *testing.T) {
 				ChatMessage: "check the stock price",
 				IsRecurrent: false,
 				UniqueDate:  "2021-10-20",
-				UniqueTime:  &uniqueTime,
+				UniqueTime:  uniqueTime,
 			},
 		},
 		{
@@ -286,8 +285,8 @@ func TestToReminder(t *testing.T) {
 				WeeklyDate:  "Wednesday",
 				MonthlyDate: nil,
 				AnnualDate:  "",
-				UniqueDate:  "",
-				UniqueTime:  &uniqueTime,
+				UniqueDate:  constants.NoUniqueDate,
+				UniqueTime:  uniqueTime,
 			},
 		},
 		{
@@ -300,8 +299,8 @@ func TestToReminder(t *testing.T) {
 				WeeklyDate:  "",
 				MonthlyDate: nil,
 				AnnualDate:  "",
-				UniqueDate:  "",
-				UniqueTime:  &uniqueTime,
+				UniqueDate:  constants.NoUniqueDate,
+				UniqueTime:  uniqueTime,
 			},
 		},
 		{
@@ -314,8 +313,8 @@ func TestToReminder(t *testing.T) {
 				WeeklyDate:  "",
 				MonthlyDate: nil,
 				AnnualDate:  "",
-				UniqueDate:  "2021-10-22",
-				UniqueTime:  &uniqueTime,
+				UniqueDate:  time.Now().Format(constants.YMDDateFormat),
+				UniqueTime:  uniqueTime,
 			},
 		},
 	}

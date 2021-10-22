@@ -6,4 +6,6 @@ const (
 
 	TimeFormat      = "15:04"
 	ReminderCommand = "/remindme"
+
+	NoUniqueDate = "0001-01-01"
 )

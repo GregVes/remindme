@@ -125,13 +125,14 @@ func ToValidAnnualDate(dateStr string) string {
 func ToValidDate(layout string, timeStr string) *time.Time {
 	var res time.Time
 	res, _ = time.Parse(layout, timeStr)
+	log.Print(layout, "   ", res)
 	return &res
 }
 
 func (c *Converter) ToReminder(chatId int) error {
 	c.Reminder.ChatId = chatId
 	c.Reminder.ChatMessage = c.TempReminder.Text
-	c.Reminder.UniqueTime = ToValidDate(constants.TimeFormat, c.TempReminder.TimeStr)
+	c.Reminder.UniqueTime = c.TempReminder.TimeStr
 
 	isToday := strings.Contains(c.TempReminder.DateStr, "today")
 	if isToday {
@@ -145,6 +146,7 @@ func (c *Converter) ToReminder(chatId int) error {
 		return nil
 	}
 
+	c.Reminder.UniqueDate = constants.NoUniqueDate
 	c.Reminder.IsRecurrent = true
 
 	isDaily := c.TempReminder.IsEveryDay
@@ -161,6 +163,7 @@ func (c *Converter) ToReminder(chatId int) error {
 		c.Reminder.MonthlyDate = &monthDay
 		// annual
 	} else {
+		log.Print(c.Reminder.UniqueDate)
 		c.Reminder.AnnualDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
 	}
 
