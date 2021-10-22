@@ -8,12 +8,16 @@ import (
 
 type (
 	Reminder struct {
-		Id           string
-		ChatId       int
-		Text         string
-		RecurrentDay string
-		TargetDate   time.Time
-		TargetTime   time.Time
+		Id                          string
+		ChatId                      int
+		ChatMessage                 string
+		IsRecurrent                 bool
+		IsEveryDay                  bool
+		RecurrentWeekDay            string
+		RecurrentMonthlyDatePattern *int64
+		RecurrentAnnualDate         string
+		UniqueDate                  string
+		UniqueTime                  *time.Time
 	}
 
 	Repository interface {

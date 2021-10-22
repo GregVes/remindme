@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParsingRequestAndReturningUpdateStruct(t *testing.T) {
+func TestMapToUpdate(t *testing.T) {
 
 	var bodyStr = "{\"update_id\":29329212,\"message\":{\"message_id\":566,\"from\":{\"id\":1603037541,\"is_bot\":false,\"first_name\":\"Greg\",\"username\":\"gregentoo\",\"language_code\":\"e\"},\"chat\":{\"id\":1633037542,\"first_name\":\"Greg\",\"username\":\"gregentoo\",\"type\":\"private\"},\"date\":1633703801,\"text\":\"hello world\"}}"
 	readCloserBody := ioutil.NopCloser(bytes.NewBuffer([]byte(bodyStr)))
