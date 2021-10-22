@@ -44,6 +44,7 @@ func main() {
 		os.Exit(1)
 	}
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:5433/%s?sslmode=disable", "remindme", os.Getenv("REMINDME_DB_PASSWORD"), os.Getenv("REMINDME_DB_HOST"), "remindme")
+	log.Print(dsn)
 	repository, err := postgresql.NewRepository("postgres", dsn, 2, 2)
 
 	if err != nil {
