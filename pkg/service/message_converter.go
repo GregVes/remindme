@@ -39,13 +39,8 @@ var (
 		"^(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}|" +
 		"^(each\\s+[0-30]{1,2}$)|" +
 		`\d{4}-\d{2}-\d{2}`
-	RecurrentWeeklyDatePattern  = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
-	RecurrentAnnualDatePatterns = "^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?))|" +
-		"^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))|" +
-		"^(each\\s+[0-30]$)"
-	RecurrentAnnualDatePattern  = "^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2})"
-	RecurrentMonthlyDatePattern = "^(each\\s+[0-30])"
-	RecurrentWeekDayPattern     = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
+	RecurrentWeeklyDatePattern = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
+	MonthlyDatePattern         = "^(each\\s+[0-30])"
 
 	TimePattern = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9])$"
 )
@@ -124,7 +119,7 @@ func patternSearch(pattern string, input string) (bool, error) {
 	return true, nil
 }
 
-func ToValidRecurrentAnnualDate(dateStr string) string {
+func ToValidAnnualDate(dateStr string) string {
 	return strings.Replace(dateStr, "each ", "", 1)
 }
 
@@ -155,19 +150,19 @@ func (c *Converter) ToReminder(chatId int) error {
 
 	isDaily := c.TempReminder.IsEveryDay
 	isWeekly, _ := patternSearch(RecurrentWeeklyDatePattern, c.TempReminder.DateStr)
-	isMonthly, _ := patternSearch(RecurrentMonthlyDatePattern, c.TempReminder.DateStr)
+	isMonthly, _ := patternSearch(MonthlyDatePattern, c.TempReminder.DateStr)
 
 	if isDaily {
 		c.Reminder.IsEveryDay = true
 	} else if isWeekly {
-		c.Reminder.RecurrentWeekDay = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
+		c.Reminder.WeeklyDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
 	} else if isMonthly {
 		var monthDay int64
-		monthDay, _ = strconv.ParseInt(ToValidRecurrentAnnualDate(c.TempReminder.DateStr), 0, 0)
-		c.Reminder.RecurrentMonthlyDatePattern = &monthDay
+		monthDay, _ = strconv.ParseInt(ToValidAnnualDate(c.TempReminder.DateStr), 0, 0)
+		c.Reminder.MonthlyDate = &monthDay
 		// annual
 	} else {
-		c.Reminder.RecurrentAnnualDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
+		c.Reminder.AnnualDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
 	}
 
 	return nil

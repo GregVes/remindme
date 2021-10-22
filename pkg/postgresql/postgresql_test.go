@@ -12,15 +12,15 @@ import (
 )
 
 var reminder = &repo.Reminder{
-	ChatId:                      1111,
-	ChatMessage:                 "super message",
-	IsRecurrent:                 true,
-	IsEveryDay:                  true,
-	RecurrentWeekDay:            "Monday",
-	RecurrentMonthlyDatePattern: nil,
-	RecurrentAnnualDate:         "October 17",
-	UniqueDate:                  "",
-	UniqueTime:                  nil,
+	ChatId:      1111,
+	ChatMessage: "super message",
+	IsRecurrent: true,
+	IsEveryDay:  true,
+	WeeklyDate:  "Monday",
+	MonthlyDate: nil,
+	AnnualDate:  "October 17",
+	UniqueDate:  "",
+	UniqueTime:  nil,
 }
 
 func NewMock() (*sql.DB, sqlmock.Sqlmock) {
@@ -39,9 +39,9 @@ func TestSaveReminderInDB(t *testing.T) {
 		repo.Close()
 	}()
 
-	query := `INSERT INTO reminder (chat_id, chat_message, is_recurrent, is_everyday, recurrent_week_day, recurrent_month_day, recurrent_date, unique_date, unique_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO reminder (chat_id, chat_message, is_recurrent, is_everyday, weekly_day, monthly_day, annual_date, unique_date, unique_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.ChatMessage, reminder.IsRecurrent, reminder.IsEveryDay, reminder.RecurrentWeekDay, reminder.RecurrentMonthlyDatePattern, reminder.RecurrentAnnualDate, reminder.UniqueDate, reminder.UniqueTime).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(reminder.ChatId, reminder.ChatMessage, reminder.IsRecurrent, reminder.IsEveryDay, reminder.WeeklyDate, reminder.MonthlyDate, reminder.AnnualDate, reminder.UniqueDate, reminder.UniqueTime).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	err := repo.Save(reminder)
 	assert.NoError(t, err)

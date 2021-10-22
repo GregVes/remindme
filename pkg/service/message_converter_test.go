@@ -203,7 +203,7 @@ func TestExtractRawReminder(t *testing.T) {
 		assert.Equal(t, tc.want, converter.Input)
 	}
 }
-func TestToValidRecurrentAnnualDate(t *testing.T) {
+func TestToValidAnnualDate(t *testing.T) {
 	tests := []struct {
 		input string
 		want  string
@@ -218,7 +218,7 @@ func TestToValidRecurrentAnnualDate(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		got := ToValidRecurrentAnnualDate(tc.input)
+		got := ToValidAnnualDate(tc.input)
 		assert.Equal(t, tc.want, got)
 	}
 }
@@ -241,29 +241,29 @@ func TestToReminder(t *testing.T) {
 		{
 			input: "check the stock price | each October 17 @ 12:00",
 			want: repo.Reminder{
-				ChatId:                      1111111,
-				ChatMessage:                 "check the stock price",
-				IsRecurrent:                 true,
-				IsEveryDay:                  false,
-				RecurrentWeekDay:            "",
-				RecurrentMonthlyDatePattern: nil,
-				RecurrentAnnualDate:         "October 17",
-				UniqueDate:                  "",
-				UniqueTime:                  &uniqueTime,
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: true,
+				IsEveryDay:  false,
+				WeeklyDate:  "",
+				MonthlyDate: nil,
+				AnnualDate:  "October 17",
+				UniqueDate:  "",
+				UniqueTime:  &uniqueTime,
 			},
 		},
 		{
 			input: "check the stock price | each 20 @ 12:00",
 			want: repo.Reminder{
-				ChatId:                      1111111,
-				ChatMessage:                 "check the stock price",
-				IsRecurrent:                 true,
-				IsEveryDay:                  false,
-				RecurrentWeekDay:            "",
-				RecurrentMonthlyDatePattern: &recurrenMonthdate,
-				RecurrentAnnualDate:         "",
-				UniqueDate:                  "",
-				UniqueTime:                  &uniqueTime,
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: true,
+				IsEveryDay:  false,
+				WeeklyDate:  "",
+				MonthlyDate: &recurrenMonthdate,
+				AnnualDate:  "",
+				UniqueDate:  "",
+				UniqueTime:  &uniqueTime,
 			},
 		},
 		{
@@ -279,43 +279,43 @@ func TestToReminder(t *testing.T) {
 		{
 			input: "check the stock price | each Wednesday @ 12:00",
 			want: repo.Reminder{
-				ChatId:                      1111111,
-				ChatMessage:                 "check the stock price",
-				IsRecurrent:                 true,
-				IsEveryDay:                  false,
-				RecurrentWeekDay:            "Wednesday",
-				RecurrentMonthlyDatePattern: nil,
-				RecurrentAnnualDate:         "",
-				UniqueDate:                  "",
-				UniqueTime:                  &uniqueTime,
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: true,
+				IsEveryDay:  false,
+				WeeklyDate:  "Wednesday",
+				MonthlyDate: nil,
+				AnnualDate:  "",
+				UniqueDate:  "",
+				UniqueTime:  &uniqueTime,
 			},
 		},
 		{
 			input: "check the stock price | everyday @ 12:00",
 			want: repo.Reminder{
-				ChatId:                      1111111,
-				ChatMessage:                 "check the stock price",
-				IsRecurrent:                 true,
-				IsEveryDay:                  true,
-				RecurrentWeekDay:            "",
-				RecurrentMonthlyDatePattern: nil,
-				RecurrentAnnualDate:         "",
-				UniqueDate:                  "",
-				UniqueTime:                  &uniqueTime,
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: true,
+				IsEveryDay:  true,
+				WeeklyDate:  "",
+				MonthlyDate: nil,
+				AnnualDate:  "",
+				UniqueDate:  "",
+				UniqueTime:  &uniqueTime,
 			},
 		},
 		{
 			input: "check the stock price | today @ 12:00",
 			want: repo.Reminder{
-				ChatId:                      1111111,
-				ChatMessage:                 "check the stock price",
-				IsRecurrent:                 false,
-				IsEveryDay:                  false,
-				RecurrentWeekDay:            "",
-				RecurrentMonthlyDatePattern: nil,
-				RecurrentAnnualDate:         "",
-				UniqueDate:                  "2021-10-22",
-				UniqueTime:                  &uniqueTime,
+				ChatId:      1111111,
+				ChatMessage: "check the stock price",
+				IsRecurrent: false,
+				IsEveryDay:  false,
+				WeeklyDate:  "",
+				MonthlyDate: nil,
+				AnnualDate:  "",
+				UniqueDate:  "2021-10-22",
+				UniqueTime:  &uniqueTime,
 			},
 		},
 	}
