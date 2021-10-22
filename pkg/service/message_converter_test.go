@@ -304,6 +304,20 @@ func TestToReminder(t *testing.T) {
 				UniqueTime:                  &uniqueTime,
 			},
 		},
+		{
+			input: "check the stock price | today @ 12:00",
+			want: repo.Reminder{
+				ChatId:                      1111111,
+				ChatMessage:                 "check the stock price",
+				IsRecurrent:                 false,
+				IsEveryDay:                  false,
+				RecurrentWeekDay:            "",
+				RecurrentMonthlyDatePattern: nil,
+				RecurrentAnnualDate:         "",
+				UniqueDate:                  "2021-10-22",
+				UniqueTime:                  &uniqueTime,
+			},
+		},
 	}
 	for _, tc := range tests {
 		converter := NewConverter(tc.input)

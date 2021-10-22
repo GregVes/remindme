@@ -134,16 +134,16 @@ func ToValidDate(layout string, timeStr string) *time.Time {
 	return &res
 }
 
-// eg 2021-10-22
-
-// eg everyday
-// eg each Monday
-// eg each 20
-// eg each November 20
 func (c *Converter) ToReminder(chatId int) error {
 	c.Reminder.ChatId = chatId
 	c.Reminder.ChatMessage = c.TempReminder.Text
 	c.Reminder.UniqueTime = ToValidDate(constants.TimeFormat, c.TempReminder.TimeStr)
+
+	isToday := strings.Contains(c.TempReminder.DateStr, "today")
+	if isToday {
+		c.Reminder.UniqueDate = time.Now().Format(constants.YMDDateFormat)
+		return nil
+	}
 
 	isUniqueDate := !c.TempReminder.IsRecurrent
 	if isUniqueDate {
@@ -154,29 +154,21 @@ func (c *Converter) ToReminder(chatId int) error {
 	c.Reminder.IsRecurrent = true
 
 	isDaily := c.TempReminder.IsEveryDay
+	isWeekly, _ := patternSearch(RecurrentWeeklyDatePattern, c.TempReminder.DateStr)
+	isMonthly, _ := patternSearch(RecurrentMonthlyDatePattern, c.TempReminder.DateStr)
+
 	if isDaily {
 		c.Reminder.IsEveryDay = true
-		return nil
-	}
-
-	isWeekly, _ := patternSearch(RecurrentWeeklyDatePattern, c.TempReminder.DateStr)
-	if isWeekly {
+	} else if isWeekly {
 		c.Reminder.RecurrentWeekDay = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
-		return nil
-	}
-
-	isMonthly, _ := patternSearch(RecurrentMonthlyDatePattern, c.TempReminder.DateStr)
-	if isMonthly {
-		// ParseInt() returns int64
+	} else if isMonthly {
 		var monthDay int64
 		monthDay, _ = strconv.ParseInt(ToValidRecurrentAnnualDate(c.TempReminder.DateStr), 0, 0)
 		c.Reminder.RecurrentMonthlyDatePattern = &monthDay
-		return nil
-	}
-
-	isAnnual, _ := patternSearch(RecurrentAnnualDatePattern, c.TempReminder.DateStr)
-	if isAnnual {
+		// annual
+	} else {
 		c.Reminder.RecurrentAnnualDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
 	}
+
 	return nil
 }
