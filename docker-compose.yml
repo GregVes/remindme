@@ -2,7 +2,10 @@ version: "3.6"
 
 services:
   bot:
-    image: gregentoo/remindme:${TAG}
+    #image: gregentoo/remindme:${TAG}
+    build:
+      context: . 
+      dockerfile: Dockerfile
     container_name: bot
     restart: always
     ports:
@@ -10,6 +13,7 @@ services:
     environment:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
+      - REMINDME_DB_HOST=${REMINDME_DB_HOST}
     depends_on:
       - storage
   storage:
