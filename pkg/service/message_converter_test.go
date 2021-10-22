@@ -34,7 +34,7 @@ func TestIsNewReminder(t *testing.T) {
 	}
 }
 
-/*func TestIsValidInput(t *testing.T) {
+func TestIsValidInput(t *testing.T) {
 	tests := []struct {
 		input string
 		want  bool
@@ -113,7 +113,7 @@ func TestIsNewReminder(t *testing.T) {
 		got := converter.IsValidInput()
 		assert.Equal(t, tc.want, got, tc.input)
 	}
-}*/
+}
 
 func TestPatternSearch(t *testing.T) {
 	tests := []struct {
