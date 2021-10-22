@@ -125,7 +125,6 @@ func ToValidAnnualDate(dateStr string) string {
 func ToValidDate(layout string, timeStr string) *time.Time {
 	var res time.Time
 	res, _ = time.Parse(layout, timeStr)
-	log.Print(layout, "   ", res)
 	return &res
 }
 
@@ -163,7 +162,6 @@ func (c *Converter) ToReminder(chatId int) error {
 		c.Reminder.MonthlyDate = &monthDay
 		// annual
 	} else {
-		log.Print(c.Reminder.UniqueDate)
 		c.Reminder.AnnualDate = strings.Replace(c.TempReminder.DateStr, "each ", "", 1)
 	}
 
