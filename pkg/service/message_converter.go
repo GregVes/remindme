@@ -32,15 +32,14 @@ var (
 	errorMissingArobaseSymbol = errors.New("Missing @ symbol to delimitate date from time. Example: '/remindme check the stock price | October 17 @ 08:00'")
 	erroInvalidDate           = errors.New("Wrong date format or missing. Example. /remindme check the stock price | October 17 (or today or tomorrow or everyday or each Tueday) @ 8:00'")
 	erroInvalidTime           = errors.New("Wrong time format. Example. /remindme check the stock price | October 17  @ 17:00")
-	ISO8601DatePattern        = `\d{4}-\d{2}-\d{2}`
 	DatePatterns              = "(today|everyday)|" +
 		"^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2})|" +
 		"^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))|" +
 		"^(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}|" +
 		"^(each\\s+[0-30]{1,2}$)|" +
 		`\d{4}-\d{2}-\d{2}`
-	RecurrentWeeklyDatePattern = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
-	MonthlyDatePattern         = "^(each\\s+[0-30])"
+	WeeklyDatePattern  = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
+	MonthlyDatePattern = "^(each\\s+[0-30])"
 
 	TimePattern = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9])$"
 )
@@ -149,7 +148,7 @@ func (c *Converter) ToReminder(chatId int) error {
 	c.Reminder.IsRecurrent = true
 
 	isDaily := c.TempReminder.IsEveryDay
-	isWeekly, _ := patternSearch(RecurrentWeeklyDatePattern, c.TempReminder.DateStr)
+	isWeekly, _ := patternSearch(WeeklyDatePattern, c.TempReminder.DateStr)
 	isMonthly, _ := patternSearch(MonthlyDatePattern, c.TempReminder.DateStr)
 
 	if isDaily {
