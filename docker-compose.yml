@@ -2,10 +2,7 @@ version: "3.6"
 
 services:
   bot:
-    #image: gregentoo/remindme:${TAG}
-    build:
-      context: . 
-      dockerfile: Dockerfile
+    image: gregentoo/remindme:${TAG}
     container_name: bot
     restart: always
     ports:
