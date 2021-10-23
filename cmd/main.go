@@ -37,7 +37,7 @@ func initGraylog() {
 	if graylogAddr != "" {
 		gelfWriter, err := gelf.NewWriter(graylogAddr)
 		if err != nil {
-			log.Print("gelf.NewWriter: %s", err)
+			log.Printf("gelf.NewWriter: %s", err)
 		} else {
 			log.SetOutput(io.MultiWriter(os.Stderr, gelfWriter))
 			log.Printf("Strating to log to stderr & graylog2@'%s'", graylogAddr)
