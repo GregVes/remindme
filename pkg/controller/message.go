@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gregves/remindme/pkg/constants"
+	postgresql "github.com/gregves/remindme/pkg/postgresql"
 	converter "github.com/gregves/remindme/pkg/service"
 )
 
@@ -21,12 +23,6 @@ type (
 )
 
 func PostMessage(w http.ResponseWriter, r *http.Request) {
-	// map request to Update
-
-	// get text
-	// parse text into a Reminder object (type + message + occurence + time)
-	// store reminder into db
-
 	mapper := NewRequestMapper(r)
 	err := mapper.MapToUpdate()
 	if err != nil {
@@ -48,30 +44,30 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 
 	err = converter.IsValidInput()
 	if err != nil {
-		if !Request(chatId, err.Error()) {
-			return
-		}
+		Request(chatId, err.Error())
+		return
 	}
 
-	//defer response.Body.Close()
+	converter.ToReminder(chatId)
+	log.Print(os.Getenv("REMINDME_DB_DSN"))
+	repo, err := postgresql.NewRepository("postgres", os.Getenv("REMINDME_DB_DSN"), 2, 2)
 
-	// err = converter.ToReminder(chatId)
-	// if err != nil {
-	// 	log.Print(err)
-	// }
-	// dsn := fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=disable", "remindme", os.Getenv("REMINDME_DB_PASSWORD"), os.Getenv("REMINDME_DB_HOST"), "remindme")
-	// repository, err := postgresql.NewRepository("postgres", dsn, 2, 2)
+	if err != nil {
+		log.Print(err)
+		Request(chatId, constants.ErrDb.Error())
+		return
+	}
 
-	// if err != nil {
-	// 	log.Print(err)
-	// }
-	// err = repository.Save(&converter.Reminder)
+	err = repo.Save(&converter.Reminder)
 
-	// defer repository.Close()
+	if err != nil {
+		log.Print(err)
+		Request(chatId, constants.ErrDb.Error())
+		return
+	}
+	Request(chatId, constants.SuccessSave)
 
-	// if err != nil {
-	// 	log.Print(err)
-	// }
+	defer repo.Close()
 }
 
 func Request(chatId int, message string) bool {

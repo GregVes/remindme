@@ -13,6 +13,7 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
+      - REMINDME_DB_DSN=${REMINDME_DB_DSN}
     depends_on:
       - db
   db:
