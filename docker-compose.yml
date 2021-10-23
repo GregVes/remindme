@@ -12,6 +12,7 @@ services:
       - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
       - REMINDME_DB_DSN=${REMINDME_DB_DSN}
+      - GRAYLOG_ENDPOINT=${GRAYLOG_ENDPOINT}
     depends_on:
       - db
   db:
