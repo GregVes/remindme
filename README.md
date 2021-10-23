@@ -8,15 +8,9 @@ I constantly need to remind myself about a weekly thing to do, a daily good habi
 
 So I thought about creating a Telegram Bot (no fancy thing, it just boils down to a http handler the Telegram API sends the user message to) named `@remindme_later_bot` that I can send a reminder to and that will send it back to me on the specified (recurrent) date and time.
 
-## Examples of command
+## iOS demo
 
-```sh
-/remindme start your day with breathing exercises | everyday @ 8:00
-/remindme look at the release of this documentary | "2021-12-03" @ 15:00
-/remindme checkout the weekly podcast on global warming | each Tuesday @ 18:00
-/remindme pay your bills | each 3 @ 8:00
-/remindme this is Foo birthday today | each October 19 @ 10:00
-```
+![iosScreenshot](ios_screenshot.png)
 
 ## WIP
 
