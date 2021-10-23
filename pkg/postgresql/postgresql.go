@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	repo "github.com/gregves/remindme/pkg/repository"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 )
 
 type repository struct {
@@ -34,7 +34,6 @@ func NewRepository(dialect, dsn string, idleConn, maxConn int) (repo.Repository,
 }
 
 func (r *repository) Save(reminder *repo.Reminder) error {
-	log.Print("IN SAVE")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -61,7 +60,7 @@ func (r *repository) Save(reminder *repo.Reminder) error {
 	if err != nil {
 		return err
 	}
-	log.Print(fmt.Sprintf("Reminder for Chat '%d' saved in database", reminder.ChatId))
+	log.Info(fmt.Sprintf("Reminder for Chat '%d' saved in database", reminder.ChatId))
 	return nil
 }
 

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/gregves/remindme/pkg/constants"
 	repo "github.com/gregves/remindme/pkg/repository"
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -60,21 +60,21 @@ func (c *Converter) IsValidInput() error {
 	// no pipe separating reminder text from date + time
 	rawSplit := strings.Split(c.Input, "|")
 	if len(rawSplit) != 2 {
-		log.Print(constants.ErrMissingPipeSymbol)
+		log.Error(constants.ErrMissingPipeSymbol)
 		return constants.ErrMissingPipeSymbol
 	}
 	// missing @ separator between date and time
 	splitDateTime := strings.Split(rawSplit[1], "@")
 	date := strings.TrimSpace(splitDateTime[0])
 	if len(splitDateTime) != 2 {
-		log.Print(constants.ErrMissingArobaseSymbol)
+		log.Error(constants.ErrMissingArobaseSymbol)
 		return constants.ErrMissingArobaseSymbol
 	}
 
 	// invalid date format
 	isValidDate := patternSearch(DatePatterns, date)
 	if !isValidDate {
-		log.Print(constants.ErrInvalidDate)
+		log.Error(constants.ErrInvalidDate)
 		return constants.ErrInvalidDate
 	}
 
@@ -83,7 +83,7 @@ func (c *Converter) IsValidInput() error {
 	time = strings.TrimSpace(time)
 	isValidTime := patternSearch(TimePattern, time)
 	if !isValidTime {
-		log.Print(constants.ErrInvalidTime)
+		log.Error(constants.ErrInvalidTime)
 		return constants.ErrInvalidTime
 	}
 
