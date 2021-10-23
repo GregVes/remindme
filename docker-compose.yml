@@ -2,7 +2,9 @@ version: "3.6"
 
 services:
   bot:
-    image: gregentoo/remindme:${TAG}
+    #image: gregentoo/remindme:${TAG}
+    build:
+      context: .
     container_name: bot
     restart: always
     ports:
@@ -18,7 +20,7 @@ services:
     container_name: remindme-db
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
-      timeout: 45s
+      timeout: 5s
       interval: 10s
       retries: 10
     restart: always

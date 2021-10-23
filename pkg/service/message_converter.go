@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"log"
 	"regexp"
 	"strconv"
@@ -28,11 +27,7 @@ type (
 )
 
 var (
-	errMissingPipeSymbol      = errors.New("Missing | symbol to delimitate message from date. Example: '/remindme check the stock price | October 17 @ 17:00'")
-	errorMissingArobaseSymbol = errors.New("Missing @ symbol to delimitate date from time. Example: '/remindme check the stock price | October 17 @ 08:00'")
-	erroInvalidDate           = errors.New("Wrong date format or missing. Example. /remindme check the stock price | October 17 (or today or tomorrow or everyday or each Tueday) @ 8:00'")
-	erroInvalidTime           = errors.New("Wrong time format. Example. /remindme check the stock price | October 17  @ 17:00")
-	DatePatterns              = "(today|everyday)|" +
+	DatePatterns = "(today|everyday)|" +
 		"^(each\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2})|" +
 		"^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))|" +
 		"^(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}|" +
@@ -61,43 +56,37 @@ func (c *Converter) ExtractRawReminder() {
 	c.Input = raw
 }
 
-func (c *Converter) IsValidInput() bool {
+func (c *Converter) IsValidInput() error {
 	// no pipe separating reminder text from date + time
 	rawSplit := strings.Split(c.Input, "|")
 	if len(rawSplit) != 2 {
-		log.Print(errMissingPipeSymbol)
-		return false
+		log.Print(constants.ErrMissingPipeSymbol)
+		return constants.ErrMissingPipeSymbol
 	}
 	// missing @ separator between date and time
 	splitDateTime := strings.Split(rawSplit[1], "@")
 	date := strings.TrimSpace(splitDateTime[0])
 	if len(splitDateTime) != 2 {
-		log.Print(errorMissingArobaseSymbol)
-		return false
+		log.Print(constants.ErrMissingArobaseSymbol)
+		return constants.ErrMissingArobaseSymbol
 	}
 
 	// invalid date format
-	isValidDate, err := patternSearch(DatePatterns, date)
-	if err != nil {
-		return false
-	}
+	isValidDate := patternSearch(DatePatterns, date)
 	if !isValidDate {
-		log.Print(erroInvalidDate)
-		return false
+		log.Print(constants.ErrInvalidDate)
+		return constants.ErrInvalidDate
 	}
 
 	// invalid time format
 	time := splitDateTime[1]
 	time = strings.TrimSpace(time)
-	isValidTime, err := patternSearch(TimePattern, time)
-	if err != nil {
-		log.Print(err)
-		return false
-	}
+	isValidTime := patternSearch(TimePattern, time)
 	if !isValidTime {
-		log.Print(erroInvalidTime)
-		return false
+		log.Print(constants.ErrInvalidTime)
+		return constants.ErrInvalidTime
 	}
+
 	// needed by ToReminder()
 	c.TempReminder = TempReminder{
 		Text:        strings.TrimSpace(rawSplit[0]),
@@ -106,16 +95,15 @@ func (c *Converter) IsValidInput() bool {
 		IsRecurrent: strings.Contains(date, "each") || strings.Contains(date, "everyday"),
 		IsEveryDay:  strings.Contains(date, "everyday"),
 	}
-	return true
+
+	return nil
 }
 
-func patternSearch(pattern string, input string) (bool, error) {
+func patternSearch(pattern string, input string) bool {
 	regExp := regexp.MustCompile(pattern)
 	match := regExp.MatchString(input)
-	if !match {
-		return false, nil
-	}
-	return true, nil
+
+	return match
 }
 
 func ToValidAnnualDate(dateStr string) string {
@@ -149,8 +137,8 @@ func (c *Converter) ToReminder(chatId int) error {
 	c.Reminder.IsRecurrent = true
 
 	isDaily := c.TempReminder.IsEveryDay
-	isWeekly, _ := patternSearch(WeeklyDatePattern, c.TempReminder.DateStr)
-	isMonthly, _ := patternSearch(MonthlyDatePattern, c.TempReminder.DateStr)
+	isWeekly := patternSearch(WeeklyDatePattern, c.TempReminder.DateStr)
+	isMonthly := patternSearch(MonthlyDatePattern, c.TempReminder.DateStr)
 
 	if isDaily {
 		c.Reminder.IsEveryDay = true

@@ -14,13 +14,13 @@ func HandleHook(w http.ResponseWriter, r *http.Request) {
 	var update, err = handleRequest(r)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
 	var _, errMess = sendMessage(update.Message.Chat.Id, update.Message.Text)
 	if errMess != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	} else {
 		log.Println("Message successfully delivered")
@@ -67,6 +67,6 @@ func main() {
 	defer response.Body.Close
 	http.HandleFunc("/", HandleHook)
 	log.Println("Starting server at port 8002")
-	log.Fatal(http.ListenAndServe(":8002", nil))
+	log.Print(http.ListenAndServe(":8002", nil))
 }
 */

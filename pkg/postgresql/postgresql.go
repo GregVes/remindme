@@ -34,6 +34,7 @@ func NewRepository(dialect, dsn string, idleConn, maxConn int) (repo.Repository,
 }
 
 func (r *repository) Save(reminder *repo.Reminder) error {
+	log.Print("IN SAVE")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
