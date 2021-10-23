@@ -34,7 +34,7 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	chatMessage := mapper.Update.Message.Text
 
 	if !converter.IsNewReminder(chatMessage) {
-		Request(chatId, "Not a reminder. Prefix your message with /remindme")
+		Request(chatId, constants.ErrNotAReminder.Error())
 		return
 	}
 
