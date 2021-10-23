@@ -2,7 +2,9 @@ version: "3.6"
 
 services:
   bot:
-    image: gregentoo/remindme:${TAG}
+    #image: gregentoo/remindme:${TAG}
+    build:
+      context: .
     container_name: bot
     restart: always
     ports:
@@ -11,6 +13,7 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
+      - REMINDME_DB_DSN=${REMINDME_DB_DSN}
     depends_on:
       - db
   db:
@@ -18,7 +21,7 @@ services:
     container_name: remindme-db
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
-      timeout: 45s
+      timeout: 5s
       interval: 10s
       retries: 10
     restart: always

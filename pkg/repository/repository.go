@@ -20,5 +20,6 @@ type (
 
 	Repository interface {
 		Save(reminder *Reminder) error
+		Close()
 	}
 )

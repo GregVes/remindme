@@ -33,79 +33,54 @@ func TestIsNewReminder(t *testing.T) {
 		assert.Equal(t, tc.want, got)
 	}
 }
-
 func TestIsValidInput(t *testing.T) {
 	tests := []struct {
 		input string
-		want  bool
+		want  error
 	}{
 		{
 			input: "/remindme check the stock price | October 26 @ 23:00",
-			want:  true,
+			want:  nil,
 		},
 		{
 			input: "/remindme check the stock price | October 17 @ 23:00",
-			want:  true,
+			want:  nil,
 		},
 		{
 			input: "/remindme check the stock price | each October 17 @ 23:00",
-			want:  true,
+			want:  nil,
 		},
 		{
 			input: "/remindme check the stock price | each Tuesday @ 23:00",
-			want:  true,
+			want:  nil,
 		},
 		{
 			input: "/remindme check the stock price | each uesday @ 23:00",
-			want:  false,
+			want:  constants.ErrInvalidDate,
 		},
 		{
 			input: "/remindme check the stock price October 17 @ 23:00",
-			want:  false,
+			want:  constants.ErrMissingPipeSymbol,
 		},
 		{
 			input: "/remindme check the stock price | October 17 23:00",
-			want:  false,
+			want:  constants.ErrMissingArobaseSymbol,
 		},
 		{
 			input: "/remindme October 18 | check the stock price @ 23:00",
-			want:  false,
+			want:  constants.ErrInvalidDate,
 		},
 		{
 			input: "/remindme check the stock price October | 17 @ 23:00",
-			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 17 23:00",
-			want:  false,
+			want:  constants.ErrInvalidDate,
 		},
 		{
 			input: "/remindme check the stock price | October 18 @ :00",
-			want:  false,
+			want:  constants.ErrInvalidTime,
 		},
 		{
 			input: "/remindme @ 15:00 check the stock price",
-			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 26",
-			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 26 @ 23:01",
-			want:  true,
-		},
-		{
-			input: "/remindme check the stock price | October 26 @ 443:434",
-			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 26 @ 484828",
-			want:  false,
-		},
-		{
-			input: "/remindme check the stock price | October 26 @ 484828",
-			want:  false,
+			want:  constants.ErrMissingPipeSymbol,
 		},
 	}
 	for _, tc := range tests {
@@ -178,7 +153,7 @@ func TestPatternSearch(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		got, _ := patternSearch(tc.pattern, tc.input)
+		got := patternSearch(tc.pattern, tc.input)
 		assert.Equal(t, tc.want, got, tc.input)
 	}
 }
