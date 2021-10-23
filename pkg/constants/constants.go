@@ -21,7 +21,7 @@ var (
 	ErrInvalidTime          = errors.New("\xF0\x9F\x9A\xA9 Wrong time format. Example. /remindme check the stock price | each October 20  @ 17:00")
 	ErrInvalidCommand       = errors.New("\xF0\x9F\x9A\xA7 This is not a valid reminder. Prefix your message with /remindme")
 	ErrDb                   = errors.New("\xF0\x9F\x9A\xA7 An error occurred while trying to save your reminder. Please try later")
-	ErrNotAReminder         = errors.New("\xE2\x9D\x97	This is not a valid reminder. Prefix your message with /remindme")
+	ErrNotAReminder         = errors.New("\xE2\x9D\x97 This is not a valid reminder. Prefix your message with /remindme")
 
 	SuccessSave = "\xE2\x9C\x85 I saved the info and will remind you about it when it is time to!"
 )
