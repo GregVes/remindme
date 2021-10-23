@@ -2,8 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -46,7 +47,7 @@ func NewRequestMapper(r *http.Request) *RequestMapper {
 func (m *RequestMapper) MapToUpdate() error {
 	var update Update
 	if err := json.NewDecoder(m.Request.Body).Decode(&update); err != nil {
-		log.Printf("could not decode incoming message %s", err.Error())
+		log.Errorf("could not decode incoming message %s", err.Error())
 		return err
 	}
 	m.Update = &update

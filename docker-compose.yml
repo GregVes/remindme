@@ -13,6 +13,7 @@ services:
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
       - REMINDME_DB_DSN=${REMINDME_DB_DSN}
       - GRAYLOG_ENDPOINT=${GRAYLOG_ENDPOINT}
+      - TZ=Europe/Berlin
     depends_on:
       - db
   db:
@@ -36,3 +37,7 @@ services:
       - /var/lib/postgresql/data
     ports:
       - 5433:5432
+networks: 
+  default: 
+    external: 
+      name: graylog

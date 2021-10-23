@@ -1,16 +1,25 @@
 package main
 
 import (
+	//"log"
+
 	"fmt"
-	"io"
-	"log"
 	"net/http"
 	"os"
 
-	"github.com/Graylog2/go-gelf/gelf"
+	graylog "github.com/gemnasium/logrus-graylog-hook/v3"
 	"github.com/gorilla/mux"
 	"github.com/gregves/remindme/pkg/controller"
+	log "github.com/sirupsen/logrus"
 )
+
+type NullFormatter struct {
+}
+
+// Don't spend time formatting logs
+func (NullFormatter) Format(e *log.Entry) ([]byte, error) {
+	return []byte{}, nil
+}
 
 var PORT = 8002
 
@@ -23,9 +32,9 @@ func main() {
 	r.HandleFunc("/bot", controller.PostMessage).Methods("POST")
 	http.Handle("/bot", r)
 
-	log.Println(fmt.Sprintf("Starting server at port %d", PORT))
+	log.Info(fmt.Sprintf("Starting server at port %d", PORT))
 
-	log.Print(http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil))
+	log.Info(http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil))
 
 	// parse db every 30mn to check for reminders to push to chats. Maybe it will be a separate application that the API should talk to
 	// if matches, push reminders to charts
@@ -33,16 +42,9 @@ func main() {
 
 func initGraylog() {
 	graylogAddr := os.Getenv("GRAYLOG_ENDPOINT")
-
-	if graylogAddr != "" {
-		gelfWriter, err := gelf.NewWriter(graylogAddr)
-		if err != nil {
-			log.Printf("gelf.NewWriter: %s", err)
-		} else {
-			log.SetOutput(io.MultiWriter(os.Stderr, gelfWriter))
-			log.Printf("Starting to log to '%s'", graylogAddr)
-		}
-	} else {
-		log.Print("Missing GRAYLOG_ENDPOINT env var")
-	}
+	hook := graylog.NewGraylogHook(graylogAddr, map[string]interface{}{})
+	log.SetReportCaller(true)
+	log.AddHook(hook)
+	log.Info("Starting to send application logs to Graylog instance")
+	log.SetFormatter(new(NullFormatter)) // Don't send logs to stdout
 }

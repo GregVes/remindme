@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gregves/remindme/pkg/constants"
 	postgresql "github.com/gregves/remindme/pkg/postgresql"
@@ -26,7 +27,7 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	mapper := NewRequestMapper(r)
 	err := mapper.MapToUpdate()
 	if err != nil {
-		log.Print(err)
+		log.Error(err)
 		return
 	}
 
@@ -49,7 +50,6 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	converter.ToReminder(chatId)
-	log.Print(os.Getenv("REMINDME_DB_DSN"))
 	repo, err := postgresql.NewRepository("postgres", os.Getenv("REMINDME_DB_DSN"), 2, 2)
 
 	if err != nil {
@@ -61,7 +61,7 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	err = repo.Save(&converter.Reminder)
 
 	if err != nil {
-		log.Print(err)
+		log.Error(err)
 		Request(chatId, constants.ErrDb.Error())
 		return
 	}
@@ -79,9 +79,9 @@ func Request(chatId int, message string) bool {
 	_, err := http.PostForm(SendMesssageEndpoint, data)
 
 	if err != nil {
-		log.Printf("error when posting text to the chat with id %d: %s", chatId, err.Error())
+		log.Errorf("error when posting text to the chat with id %d: %s", chatId, err.Error())
 		return false
 	}
-	log.Printf("Message '%s' successfully sent to chat %d", message, chatId)
+	log.Infof("Message '%s' successfully sent to chat %d", message, chatId)
 	return true
 }
