@@ -82,6 +82,6 @@ func Request(chatId int, message string) bool {
 		log.Printf("error when posting text to the chat with id %d: %s", chatId, err.Error())
 		return false
 	}
-	log.Printf("Message successfully sent to chat with id %d", chatId)
+	log.Printf("Message '%s' successfully sent to chat %d", message, chatId)
 	return true
 }

@@ -40,7 +40,7 @@ func initGraylog() {
 			log.Printf("gelf.NewWriter: %s", err)
 		} else {
 			log.SetOutput(io.MultiWriter(os.Stderr, gelfWriter))
-			log.Printf("Strating to log to stderr & graylog2@'%s'", graylogAddr)
+			log.Printf("Starting to log to '%s'", graylogAddr)
 		}
 	} else {
 		log.Print("Missing GRAYLOG_ENDPOINT env var")
