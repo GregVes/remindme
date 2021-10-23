@@ -10,7 +10,7 @@ So I thought about creating a Telegram Bot (no fancy thing, it just boils down t
 
 ## iOS demo
 
-<img src="./ios_screenshot.jpg" height="600" />
+<img src="./ios_screenshot.jpg" height="800" />
 
 ## WIP
 
