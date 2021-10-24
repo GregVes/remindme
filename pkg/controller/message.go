@@ -53,7 +53,7 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	repo, err := postgresql.NewRepository("postgres", os.Getenv("REMINDME_DB_DSN"), 2, 2)
 
 	if err != nil {
-		log.Print(err)
+		log.Error(err)
 		Request(chatId, constants.ErrDb.Error())
 		return
 	}
@@ -62,7 +62,7 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Error(err)
-		Request(chatId, constants.ErrDb.Error())
+		Request(chatId, constants.ErrDbDuplicate.Error())
 		return
 	}
 	Request(chatId, constants.SuccessSave)
