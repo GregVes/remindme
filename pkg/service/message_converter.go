@@ -36,7 +36,7 @@ var (
 	WeeklyDatePattern  = "^(each\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))"
 	MonthlyDatePattern = "^(each\\s+[0-30])"
 
-	TimePattern = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9])$"
+	TimePattern = "^([0-9]|0[0-9]|1[0-9]|2[0-3]):(00|30)$"
 )
 
 func NewConverter(message string) *Converter {
