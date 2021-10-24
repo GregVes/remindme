@@ -22,6 +22,7 @@ var (
 	ErrInvalidCommand       = errors.New("\xF0\x9F\x9A\xA7 This is not a valid reminder. Prefix your message with /remindme")
 	ErrDb                   = errors.New("\xF0\x9F\x9A\xA7 An error occurred while trying to save your reminder. Please try later or contact Greg at +491749505953")
 	ErrNotAReminder         = errors.New("\xE2\x9D\x97 This is not a valid reminder. Prefix your message with /remindme")
+	ErrDbDuplicate          = errors.New("\xF0\x9F\x98\xB3 You already asked me to remind you this. So ask me something else.")
 
 	SuccessSave = "\xE2\x9C\x85 I saved the info and will remind you about it when it is time to!"
 )
