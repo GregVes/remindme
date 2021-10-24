@@ -24,7 +24,6 @@ func (NullFormatter) Format(e *log.Entry) ([]byte, error) {
 var PORT = 8002
 
 func main() {
-
 	initGraylog()
 
 	r := mux.NewRouter()
@@ -35,9 +34,6 @@ func main() {
 	log.Info(fmt.Sprintf("Starting server at port %d", PORT))
 
 	log.Info(http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil))
-
-	// parse db every 30mn to check for reminders to push to chats. Maybe it will be a separate application that the API should talk to
-	// if matches, push reminders to charts
 }
 
 func initGraylog() {
