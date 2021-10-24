@@ -12,7 +12,7 @@ So I thought about creating a Telegram Bot (no fancy thing, it just boils down t
 
 <img src="./ios_screenshot.jpg" height="800" />
 
-NOTE: at the moment, it only supports `13:00` or `13:30` kind of time and not `13:05` or `13:34. 
+NOTE: at the moment, it only supports `13:00` or `13:30` kind of time and not `13:05` or `13:34`. 
 
 ## WIP
 
