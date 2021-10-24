@@ -16,7 +16,7 @@ NOTE: at the moment, it only supports `13:00` or `13:30` kind of time and not `1
 
 ## WIP
 
-I am currently working on having [a Node app](https://github.com/GregVes/remindme-db-checker) that checks db in an fix interval of time to get matching reminders and send them to != chats. So basically when sending reminders to the bot at the moment, it won't remind yet (messages are only stored in db)
+I am currently working on having a Node app that checks db in an fix interval of time to get matching reminders and send them to != chats. So basically when sending reminders to the bot at the moment, it won't remind yet (messages are only stored in db)
 
 ## Stack stuff
 
