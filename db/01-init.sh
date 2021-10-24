@@ -20,4 +20,5 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     unique_time time NOT NULL,
     CONSTRAINT valid_month_date CHECK (monthly_day BETWEEN 1 AND 31)
   );
+  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $REMINDME_DB_USER WITH GRANT OPTION
 EOSQL
