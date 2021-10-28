@@ -29,7 +29,9 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/bot", controller.PostMessage).Methods("POST")
+	r.HandleFunc("/batch", controller.PostReminders).Methods("POST")
 	http.Handle("/bot", r)
+	http.Handle("/batch", r)
 
 	log.Info(fmt.Sprintf("Starting server at port %d", PORT))
 
