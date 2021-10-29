@@ -9,14 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//var SendMesssageEndpoint = "https://api.telegram.org/bot" + os.Getenv("TELEGRAM_BOT_TOKEN") + "/sendMessage"
-
-type ()
-
 func PostReminders(w http.ResponseWriter, r *http.Request) {
-	// resquest body = []Reminders
-	// iterate over reminders
-	// /sendMessage to reminder.ChatId with reminder.ChatMessage as reponse.Body
 	var reminders repo.Reminders
 	var jsonData []byte
 	w.Header().Set("Content-Type", "application/json")
