@@ -7,9 +7,15 @@ import (
 	"net/http"
 	"os"
 
+	"database/sql"
+
 	graylog "github.com/gemnasium/logrus-graylog-hook/v3"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/gorilla/mux"
 	"github.com/gregves/remindme/pkg/controller"
+	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -25,6 +31,7 @@ var PORT = 8002
 
 func main() {
 	initGraylog()
+	migrateDb("postgres", os.Getenv("REMINDME_DB_DSN"), os.Getenv("DB_MIGRATIONS_DIR"))
 
 	r := mux.NewRouter()
 
@@ -45,4 +52,24 @@ func initGraylog() {
 	log.AddHook(hook)
 	log.Info("Starting to send application logs to Graylog instance")
 	log.SetFormatter(new(NullFormatter)) // Don't send logs to stdout
+}
+
+func migrateDb(dbType string, dsn string, migrationsDir string) {
+	db, err := sql.Open(dbType, dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(migrationsDir, "postgres", driver)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	m.Steps(2)
+	log.Info("Migration - if any - done")
 }
