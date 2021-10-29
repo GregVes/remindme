@@ -1,3 +1,0 @@
-22 octobre
-
-Restart in message.go and Post() because we need to reintegrate the http server + handler to receive and store reminders in db
