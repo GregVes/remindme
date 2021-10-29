@@ -15,6 +15,7 @@ services:
       - REMINDME_DB_HOST=${REMINDME_DB_HOST}
       - REMINDME_DB_DSN=${REMINDME_DB_DSN}
       - GRAYLOG_ENDPOINT=${GRAYLOG_ENDPOINT}
+      - DB_MIGRATIONS_DIR=${DB_MIGRATIONS_DIR}
       - TZ=Europe/Berlin
 networks: 
   default: 
