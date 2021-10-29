@@ -12,10 +12,6 @@ So I thought about creating a Telegram Bot (no fancy thing, it just boils down t
 
 <img src="./ios_screenshot.jpg" height="800" />
 
-## WIP
-
-I am currently working on having a Node app that checks db in an fix interval of time to get matching reminders and send them to != chats. So basically when sending reminders to the bot at the moment, it won't remind yet (messages are only stored in db)
-
 ## Stack stuff
 
 The Golang server and the Postgresql database are running in containers on my Debian server and a Drone instance is used for CI/CD
