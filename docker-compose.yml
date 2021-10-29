@@ -16,29 +16,6 @@ services:
       - REMINDME_DB_DSN=${REMINDME_DB_DSN}
       - GRAYLOG_ENDPOINT=${GRAYLOG_ENDPOINT}
       - TZ=Europe/Berlin
-    depends_on:
-      - db
-  db:
-    image: postgres:${POSTGRESQL_VERSION}
-    container_name: remindme-db
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
-      timeout: 5s
-      interval: 10s
-      retries: 10
-    restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - REMINDME_DB_NAME=${REMINDME_DB_NAME}
-      - REMINDME_DB_USER=${REMINDME_DB_USER}
-      - REMINDME_DB_PASSWORD=${REMINDME_DB_PASSWORD}
-      - TZ=Europe/Berlin
-    volumes:
-      - ./db:/docker-entrypoint-initdb.d/
-      - /var/lib/postgresql/data
-    ports:
-      - 5433:5432
 networks: 
   default: 
     external: 
