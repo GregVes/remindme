@@ -7,35 +7,36 @@ platform:
   arch: amd64
 
 steps:
-- name: Unit test
-  image: golang
+# - name: Unit test
+#   image: golang
+#   commands:
+#   - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
+#   - ./gotest ./... -v -cover
+# - name: Build and push image
+#   image: plugins/docker
+#   password:
+#       from_secret: DOCKER_HUB_PWD
+#   settings: 
+#     username: gregentoo
+#     password:
+#       from_secret: DOCKER_HUB_PWD
+#     repo: gregentoo/remindme
+#     tags:
+#       - latest
+#       - ${DRONE_COMMIT_SHA}
+#   when:
+#     branch:
+#     - main
+- name: Update deployment file image tag 
+  image: gregentoo/alpine:v3.14.2
   commands:
-  - curl https://gotest-release.s3.amazonaws.com/gotest_linux > gotest && chmod +x gotest
-  - ./gotest ./... -v -cover
-- name: Build and push image
-  image: plugins/docker
-  password:
-      from_secret: DOCKER_HUB_PWD
-  settings: 
-    username: gregentoo
-    password:
-      from_secret: DOCKER_HUB_PWD
-    repo: gregentoo/remindme
-    tags:
-      - latest
-      - ${DRONE_COMMIT_SHA}
-  when:
-    branch:
-    - main
-- name: Deployment
-  image: curlimages/curl
-  environment:
-    DEPLOYER_AUTH_TOKEN:
-      from_secret: DEPLOYER_AUTH_TOKEN 
-    DEPLOYER_ENDPOINT:
-      from_secret: DEPLOYER_ENDPOINT
-  commands:
-  - curl -X POST --data '{"project":"remindme","tag":"${DRONE_COMMIT_SHA}"}' -H "Content-Type:application/json"  -H "Authorization:Bearer $DEPLOYER_AUTH_TOKEN" $DEPLOYER_ENDPOINT
-  when:
-    branch:
-    - main
+    git clone https://github.com/GregVes/ops.git
+    cd ops
+    git pull
+    yq e -i '.services.bot.image = "gregentoo/remindme:${DRONE_COMMIT_SHA}"' ./remindme/docker-compose.yml
+    git add .
+    git commit -m "update deployment image tag"
+    git push origin main
+  # when:
+    # branch:
+    # - main
