@@ -34,14 +34,14 @@ func PostMessage(w http.ResponseWriter, r *http.Request) {
 	chatId := mapper.Update.Message.Chat.Id
 	chatMessage := mapper.Update.Message.Text
 
-	if !converter.IsNewReminder(chatMessage) {
-		Request(chatId, constants.ErrNotAReminder.Error())
-		return
-	}
+	// if !converter.IsNewReminder(chatMessage) {
+	// 	Request(chatId, constants.ErrNotAReminder.Error())
+	// 	return
+	// }
 
 	converter := converter.NewConverter(chatMessage)
 
-	converter.ExtractRawReminder()
+	//converter.ExtractRawReminder()
 
 	err = converter.IsValidInput()
 	if err != nil {

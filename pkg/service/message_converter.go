@@ -46,15 +46,15 @@ func NewConverter(message string) *Converter {
 	}
 }
 
-func IsNewReminder(message string) bool {
-	return strings.HasPrefix(message, constants.ReminderCommand)
-}
+// func IsNewReminder(message string) bool {
+// 	return strings.HasPrefix(message, constants.ReminderCommand)
+// }
 
-func (c *Converter) ExtractRawReminder() {
-	raw := strings.TrimPrefix(c.Input, constants.ReminderCommand)
-	raw = strings.TrimSpace(raw)
-	c.Input = raw
-}
+// func (c *Converter) ExtractRawReminder() {
+// 	raw := strings.TrimPrefix(c.Input, constants.ReminderCommand)
+// 	raw = strings.TrimSpace(raw)
+// 	c.Input = raw
+// }
 
 func (c *Converter) IsValidInput() error {
 	// no pipe separating reminder text from date + time

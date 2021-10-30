@@ -9,77 +9,77 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIsNewReminder(t *testing.T) {
+// func TestIsNewReminder(t *testing.T) {
 
-	tests := []struct {
-		input string
-		want  bool
-	}{
-		{
-			input: "/remindme check the stock price | October 17 @ 13:00",
-			want:  true,
-		},
-		{
-			input: "/reminyme check the stock price | October 17 @ 08:00",
-			want:  false,
-		},
-		{
-			input: "check the stock price | October 17 @ 15:30 /remindme",
-			want:  false,
-		},
-	}
-	for _, tc := range tests {
-		got := IsNewReminder(tc.input)
-		assert.Equal(t, tc.want, got)
-	}
-}
+// 	tests := []struct {
+// 		input string
+// 		want  bool
+// 	}{
+// 		{
+// 			input: "check the stock price | October 17 @ 13:00",
+// 			want:  true,
+// 		},
+// 		{
+// 			input: "check the stock price | October 17 @ 08:00",
+// 			want:  false,
+// 		},
+// 		{
+// 			input: "check the stock price | October 17 @ 15:30 /remindme",
+// 			want:  false,
+// 		},
+// 	}
+// 	for _, tc := range tests {
+// 		got := IsNewReminder(tc.input)
+// 		assert.Equal(t, tc.want, got)
+// 	}
+// }
 func TestIsValidInput(t *testing.T) {
 	tests := []struct {
 		input string
 		want  error
 	}{
 		{
-			input: "/remindme check the stock price | October 26 @ 23:00",
+			input: "check the stock price | October 26 @ 23:00",
 			want:  nil,
 		},
 		{
-			input: "/remindme check the stock price | October 17 @ 23:00",
+			input: "check the stock price | October 17 @ 23:00",
 			want:  nil,
 		},
 		{
-			input: "/remindme check the stock price | each October 17 @ 23:00",
+			input: "check the stock price | each October 17 @ 23:00",
 			want:  nil,
 		},
 		{
-			input: "/remindme check the stock price | each Tuesday @ 23:00",
+			input: "check the stock price | each Tuesday @ 23:00",
 			want:  nil,
 		},
 		{
-			input: "/remindme check the stock price | each uesday @ 23:00",
+			input: "check the stock price | each uesday @ 23:00",
 			want:  constants.ErrInvalidDate,
 		},
 		{
-			input: "/remindme check the stock price October 17 @ 23:00",
+			input: "check the stock price October 17 @ 23:00",
 			want:  constants.ErrMissingPipeSymbol,
 		},
 		{
-			input: "/remindme check the stock price | October 17 23:00",
+			input: "check the stock price | October 17 23:00",
 			want:  constants.ErrMissingArobaseSymbol,
 		},
 		{
-			input: "/remindme October 18 | check the stock price @ 23:00",
+			input: "October 18 | check the stock price @ 23:00",
 			want:  constants.ErrInvalidDate,
 		},
 		{
-			input: "/remindme check the stock price October | 17 @ 23:00",
+			input: "check the stock price October | 17 @ 23:00",
 			want:  constants.ErrInvalidDate,
 		},
 		{
-			input: "/remindme check the stock price | October 18 @ :00",
+			input: "check the stock price | October 18 @ :00",
 			want:  constants.ErrInvalidTime,
 		},
 		{
-			input: "/remindme @ 15:00 check the stock price",
+			input: "@ 15:00 check the stock price",
 			want:  constants.ErrMissingPipeSymbol,
 		},
 	}
@@ -158,26 +158,26 @@ func TestPatternSearch(t *testing.T) {
 	}
 }
 
-func TestExtractRawReminder(t *testing.T) {
-	tests := []struct {
-		input string
-		want  string
-	}{
-		{
-			input: "/remindme check the stock price | October 17 @ 23:00",
-			want:  "check the stock price | October 17 @ 23:00",
-		},
-		{
-			input: "/remindme     buy bread | tomorrow @ 16:30",
-			want:  "buy bread | tomorrow @ 16:30",
-		},
-	}
-	for _, tc := range tests {
-		converter := NewConverter(tc.input)
-		converter.ExtractRawReminder()
-		assert.Equal(t, tc.want, converter.Input)
-	}
-}
+// func TestExtractRawReminder(t *testing.T) {
+// 	tests := []struct {
+// 		input string
+// 		want  string
+// 	}{
+// 		{
+// 			input: "check the stock price | October 17 @ 23:00",
+// 			want:  "check the stock price | October 17 @ 23:00",
+// 		},
+// 		{
+// 			input: "buy bread | tomorrow @ 16:30",
+// 			want:  "buy bread | tomorrow @ 16:30",
+// 		},
+// 	}
+// 	for _, tc := range tests {
+// 		converter := NewConverter(tc.input)
+// 		converter.ExtractRawReminder()
+// 		assert.Equal(t, tc.want, converter.Input)
+// 	}
+// }
 func TestToValidAnnualDate(t *testing.T) {
 	tests := []struct {
 		input string
@@ -201,12 +201,12 @@ func TestToReminder(t *testing.T) {
 	var recurrenMonthdate int64 = 20
 	uniqueTime := "12:00"
 	// scenarii:
-	// /remindme to check the stock price : everyday @ 5pm OK
-	// /remindme to check the stock price : each 20 @ 5pm
+	// to check the stock price : everyday @ 5pm OK
+	// to check the stock price : each 20 @ 5pm
 
-	// /remindme to check the stock price : each Tuesday @ 5pm OK
-	// /remindme to check the stock price : each November 20 @ 5pm OK
-	// /remindme to check the stock price : 2021-10-25 @ 5pm OK
+	// to check the stock price : each Tuesday @ 5pm OK
+	// to check the stock price : each November 20 @ 5pm OK
+	// to check the stock price : 2021-10-25 @ 5pm OK
 
 	tests := []struct {
 		input string
