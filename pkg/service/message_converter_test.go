@@ -43,6 +43,10 @@ func TestIsValidInput(t *testing.T) {
 			want:  nil,
 		},
 		{
+			input: "check the stock price | 2021-10-31 @ 23:00",
+			want:  nil,
+		},
+		{
 			input: "check the stock price | October 17 @ 23:00",
 			want:  nil,
 		},
