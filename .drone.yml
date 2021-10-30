@@ -30,13 +30,13 @@ steps:
 - name: Update deployment file image tag 
   image: gregentoo/alpine:v3.14.2
   commands:
-    git clone https://github.com/GregVes/ops.git
-    cd ops
-    git pull
-    yq e -i '.services.bot.image = "gregentoo/remindme:${DRONE_COMMIT_SHA}"' ./remindme/docker-compose.yml
-    git add .
-    git commit -m "update deployment image tag"
-    git push origin main
+    - git clone https://github.com/GregVes/ops.git
+    - cd ops
+    - git pull
+    - yq e -i '.services.bot.image = "gregentoo/remindme:${DRONE_COMMIT_SHA}"' ./remindme/docker-compose.yml
+    - git add .
+    - git commit -m "update deployment image tag"
+    - git push origin main
   # when:
     # branch:
     # - main
