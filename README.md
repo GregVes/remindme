@@ -10,8 +10,6 @@ So I thought about creating a Telegram Bot (no fancy thing, it just boils down t
 
 ## iOS demo
 
-<img src="./ios_screenshot.jpg" height="800" />
-
 ## Stack stuff
 
 The Golang server and the Postgresql database are running in containers on my Debian server and a Drone instance is used for CI/CD
