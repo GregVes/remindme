@@ -33,7 +33,8 @@ steps:
     - git clone https://github.com/GregVes/ops.git
     - cd ops
     - git pull
-    - yq e -i '.services.bot.image = "gregentoo/remindme:${DRONE_COMMIT_SHA}"' ./remindme/docker-compose.yml
+    #- yq e -i '.services.bot.image = "gregentoo/remindme:${DRONE_COMMIT_SHA}"' ./remindme/docker-compose.yml
+    - yq e -i '.services.bot.image = "gregentoo/remindme:hello"' ./remindme/docker-compose.yml
     - git add .
     - git commit -m "update deployment image tag"
     - git push origin main
