@@ -15,3 +15,5 @@ So I thought about creating a Telegram Bot (no fancy thing, it just boils down t
 ## Stack stuff
 
 The Golang server and the Postgresql database are running in containers on my Debian server and a Drone instance is used for CI. CD is done by committing/pushing image tag [here](https://github.com/GregVes/ops/remindme/docker-compose.yml) that triggers a program actually deploying the app.
+
+NOTE: working at moving this app in a k8s cluster
